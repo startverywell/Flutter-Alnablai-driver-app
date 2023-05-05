@@ -40,6 +40,10 @@ class NotifRepository {
       throw UnimplementedError;
     }
   }
+
+  Future<void> doReadAt(String notiID) async {
+    await DioClient.doReadAt(notiID);
+  }
 }
 
 final notificationRepositoryProvider = Provider<NotifRepository>((ref) {

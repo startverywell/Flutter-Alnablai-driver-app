@@ -17,6 +17,11 @@ class HomeNotificationsController extends StateNotifier<AsyncValue<NotifList>> {
       state = newState;
     }
   }
+
+  Future<void> doReadAt(String notiID) async {
+    state = const AsyncValue.loading();
+    await AsyncValue.guard(() => notifRepo.doReadAt(notiID));
+  }
 }
 
 final homeNotificationsCtrProvider = StateNotifierProvider.autoDispose<

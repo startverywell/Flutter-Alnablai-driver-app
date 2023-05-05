@@ -40,6 +40,7 @@ dependencies:
   shared_preferences: ^2.0.17
   package_info_plus: ^3.1.0
   loading_indicator: ^3.1.0
+  image_picker:
 
 dev_dependencies:
   flutter_test:

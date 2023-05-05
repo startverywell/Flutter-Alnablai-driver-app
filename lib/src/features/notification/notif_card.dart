@@ -2,7 +2,7 @@ import 'package:alnabali_driver/src/routing/app_router.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:alnabali_driver/src/network/dio_client.dart';
 import 'package:alnabali_driver/src/constants/app_constants.dart';
 import 'package:alnabali_driver/src/constants/app_styles.dart';
 import 'package:alnabali_driver/src/features/notification/notif.dart';
@@ -34,7 +34,9 @@ class NotifCard extends StatelessWidget {
         alignment: WrapAlignment.end,
         children: [
           GestureDetector(
-            onTap: () {
+            onTap: () async {
+              await DioClient.doReadAt(info.id.toString());
+              // ignore: use_build_context_synchronously
               context.pushNamed(
                 AppRoute.tripDetail.name,
                 params: {'tripId': info.tripId},
@@ -55,6 +57,7 @@ class NotifCard extends StatelessWidget {
                 borderRadius: borderRadius,
                 child: InkWell(
                   borderRadius: borderRadius,
+                  // onTap: await DioClient.doReadAt(info.tripId),
                   onTap: null, //onPressed,
                   //splashColor: kColorPrimaryBlue.withOpacity(0.1),
                   //splashFactory: InkSplash.splashFactory,
@@ -67,31 +70,9 @@ class NotifCard extends StatelessWidget {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            // CircleAvatar(
-                            //   radius: 50.h,
-                            //   backgroundColor: getStatusColor(info.status),
-                            //   child: Center(
-                            //     child: Text(
-                            //       AppLocalizations.of(context).trip,
-                            //       style: TextStyle(
-                            //         fontFamily: 'Montserrat',
-                            //         fontWeight: FontWeight.w400,
-                            //         fontSize: 28.sp,
-                            //         color: Colors.white,
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
                             CircleAvatar(
                               radius: 50.h,
                               backgroundColor: Colors.transparent,
-                              // child: Image.network(
-                              //   info.clientAvatar,
-                              //   errorBuilder: (context, error, stackTrace) {
-                              //     return Image.network(
-                              //         "http://167.86.102.230/Alnabali/public/images/admin/client_default.png");
-                              //   },
-                              // ),
                               onBackgroundImageError: (exception, stackTrace) {
                                 avatar =
                                     "http://167.86.102.230/alnabali/public/images/admin/client_default.png";
@@ -121,7 +102,10 @@ class NotifCard extends StatelessWidget {
                                   fontFamily: 'Montserrat',
                                   fontWeight: FontWeight.w700,
                                   fontSize: 40.sp,
-                                  color: textColor,
+                                  color: info.readAt == ''
+                                      ? textColor
+                                      : Colors.grey,
+                                  // color: textColor,
                                 ),
                               ),
                               Text(
@@ -133,7 +117,10 @@ class NotifCard extends StatelessWidget {
                                   fontFamily: 'Montserrat',
                                   fontWeight: FontWeight.w500,
                                   fontSize: 38.sp,
-                                  color: textColor,
+                                  color: info.readAt == ''
+                                      ? textColor
+                                      : Colors.grey,
+                                  // color: textColor,
                                 ),
                               ),
                             ],

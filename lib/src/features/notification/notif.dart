@@ -7,20 +7,20 @@ import 'package:alnabali_driver/src/constants/app_constants.dart';
 // * ---------------------------------------------------------------------------
 
 class Notif {
-  const Notif({
-    required this.id,
-    required this.tripId,
-    required this.tripName,
-    required this.clientName,
-    required this.orgName,
-    required this.destName,
-    required this.message,
-    required this.driverName,
-    required this.status,
-    required this.notifyDate,
-    required this.clientAvatar,
-    required this.dispTripId,
-  });
+  const Notif(
+      {required this.id,
+      required this.tripId,
+      required this.tripName,
+      required this.clientName,
+      required this.orgName,
+      required this.destName,
+      required this.message,
+      required this.driverName,
+      required this.status,
+      required this.notifyDate,
+      required this.clientAvatar,
+      required this.dispTripId,
+      required this.readAt});
 
   final String id;
   final String tripId;
@@ -34,6 +34,7 @@ class Notif {
   final TripStatus status;
   final String clientAvatar;
   final String dispTripId;
+  final String readAt;
 
   String getNotifTitle() => '#$dispTripId';
   String getNotifyTimeText() => DateFormat('hh:mm a').format(notifyDate);
@@ -42,19 +43,19 @@ class Notif {
     var status = kStatusMapper[data['status']] ?? TripStatus.pending;
 
     return Notif(
-      id: data['id'].toString(),
-      tripId: data['daily_trip_id'].toString(),
-      tripName: data['trip_name'],
-      clientName: data['client_name'],
-      orgName: data['origin_name'],
-      destName: data['destination_name'],
-      message: data['message'] ?? '',
-      notifyDate: DateFormat('y-m-dd').parse('${data['updated_at']}'),
-      driverName: data['driver_name'].toString(),
-      status: status,
-      clientAvatar: data['client_avatar'],
-      dispTripId: data['disp_trip_id'],
-    );
+        id: data['id'].toString(),
+        tripId: data['daily_trip_id'].toString(),
+        tripName: data['trip_name'],
+        clientName: data['client_name'],
+        orgName: data['origin_name'],
+        destName: data['destination_name'],
+        message: data['message'] ?? '',
+        notifyDate: DateFormat('y-m-dd').parse('${data['updated_at']}'),
+        driverName: data['driver_name'].toString(),
+        status: status,
+        clientAvatar: data['client_avatar'],
+        dispTripId: data['disp_trip_id'],
+        readAt: data['read_at'] ?? '');
   }
 
   @override

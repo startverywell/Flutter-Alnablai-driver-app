@@ -111,18 +111,6 @@ class _HomeNotificationsPageState extends ConsumerState<HomeNotificationsPage> {
                       );
                     },
                   )
-                // ? ListView.separated(
-                //     padding: EdgeInsets.only(top: 100.h),
-                //     itemCount: notis.length,
-                //     itemBuilder: (BuildContext context, int itemIdx) {
-                //       return NotifCard(
-                //         info: notis[itemIdx],
-                //         onPressed: () {},
-                //       );
-                //     },
-                //     separatorBuilder: (BuildContext context, int index) =>
-                //         const SizedBox(child: Text('separator')),
-                //   )
                 : const SizedBox(),
           ),
         ));
