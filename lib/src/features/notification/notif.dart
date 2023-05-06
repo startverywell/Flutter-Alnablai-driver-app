@@ -50,7 +50,7 @@ class Notif {
         orgName: data['origin_name'],
         destName: data['destination_name'],
         message: data['message'] ?? '',
-        notifyDate: DateFormat('y-m-dd').parse('${data['updated_at']}'),
+        notifyDate: DateFormat('yyyy-mm-dd').parse('${data['created_at']}'),
         driverName: data['driver_name'].toString(),
         status: status,
         clientAvatar: data['client_avatar'],

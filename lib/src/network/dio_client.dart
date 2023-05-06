@@ -349,17 +349,19 @@ class DioClient {
   }
 
   // * POST '/android/notification/{id}/mark-read'
-  static Future<void> doReadAt(String notiID) async {
+  static Future<bool> doReadAt(String notiID) async {
     final token = await _getToken();
 
     var dio = Dio(_baseOptions);
     dio.options.headers['X-CSRF-TOKEN'] = token;
+    print(notiID);
     try {
       final response = await dio.post(
         '/notification/mark-read/$notiID',
         data: {'id': notiID},
       );
       print(response);
+      return true;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
       throw errorMessage;
