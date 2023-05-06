@@ -315,7 +315,7 @@ class DioClient {
 
     var dio = Dio(_baseOptions);
     dio.options.headers['X-CSRF-TOKEN'] = token;
-
+    print(tripId);
     try {
       final response = await dio.get(
         '/transaction/$tripId',

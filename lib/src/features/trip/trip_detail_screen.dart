@@ -170,7 +170,7 @@ class _TripDetailScreenState extends ConsumerState<TripDetailScreen>
                                   ),
                                 ],
                               ),
-                              TransactionView(tripId: info.tran_id),
+                              TransactionView(tripId: info.id),
                             ],
                           ),
                         ),
