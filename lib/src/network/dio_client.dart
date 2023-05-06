@@ -1,6 +1,10 @@
 // ignore_for_file: avoid_print
 
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:alnabali_driver/src/network/dio_exception.dart';
 
@@ -111,6 +115,56 @@ class DioClient {
       return response.data;
     } on DioError catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
+
+  // * POST '/driver/upload/image'
+  static Future<dynamic> postUpload(
+    String uid,
+    File image,
+  ) async {
+    final token = await _getToken();
+
+    String base64Image = base64Encode(image.readAsBytesSync());
+    String fileName = image.path.split('/').last;
+    var dio = Dio(_baseOptions);
+    dio.options.headers['X-CSRF-TOKEN'] = token;
+    try {
+      final response = await dio.post(
+        '/driver/upload/image',
+        data: {'id': uid, 'image': base64Image, 'name': fileName},
+      );
+      print(response.data);
+
+      return response.data;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      print(errorMessage);
+      throw errorMessage;
+    }
+  }
+
+  // * POST '/driver/remove_image'
+  static Future<dynamic> deleteImage(
+    String uid,
+  ) async {
+    final token = await _getToken();
+    var dio = Dio(_baseOptions);
+    dio.options.headers['X-CSRF-TOKEN'] = token;
+    print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
+    try {
+      final response = await dio.post(
+        '/driver/remove_image',
+        data: {
+          'id': uid,
+        },
+      );
+      print(response);
+      return response.data;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      print(errorMessage);
       throw errorMessage;
     }
   }

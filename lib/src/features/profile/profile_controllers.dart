@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:alnabali_driver/src/features/profile/profile.dart';
@@ -83,12 +85,25 @@ class EditProfileController extends StateNotifier<AsyncValue<Profile?>> {
     state = const AsyncValue.loading();
     final newState = await AsyncValue.guard(
         () => profileRepo.doEditProfile(name, phone, birthday, address));
-
     if (mounted) {
       state = newState;
     }
 
     return newState.hasValue;
+  }
+
+  Future<String?> doUploadfile(File image) async {
+    state = const AsyncValue.loading();
+    final nState =
+        await AsyncValue.guard(() => profileRepo.doUploadfile(image));
+
+    return nState.value;
+  }
+
+  Future<AsyncValue<bool?>> deleteImage() async {
+    final nState = await AsyncValue.guard(() => profileRepo.deleteImage());
+
+    return nState;
   }
 }
 

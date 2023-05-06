@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -78,6 +79,31 @@ class ProfileRepository {
     }
 
     return null;
+  }
+
+  Future<String?> doUploadfile(File image) async {
+    final data = await DioClient.postUpload(authRepo.uid!, image);
+    developer.log('doEditProfile() returned: $data');
+
+    var result = data['result'];
+    return result.toString();
+    // if (result == 'success') {
+    //   return true;
+    // } else {
+    //   throw const AppException.userNotFound();
+    // }
+  }
+
+  Future<bool?> deleteImage() async {
+    final data = await DioClient.deleteImage(authRepo.uid!);
+    developer.log('doEditProfile() returned: $data');
+
+    var result = data['result'];
+    if (result == 'success') {
+      return true;
+    } else {
+      throw const AppException.userNotFound();
+    }
   }
 
   // * -------------------------------------------------------------------------

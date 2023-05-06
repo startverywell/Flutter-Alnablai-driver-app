@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'dart:io';
+
 import 'package:alnabali_driver/src/features/profile/edit_profile_validators.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +17,7 @@ import 'package:alnabali_driver/src/widgets/custom_painter.dart';
 import 'package:alnabali_driver/src/widgets/dialogs.dart';
 import 'package:alnabali_driver/src/widgets/progress_hud.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -33,6 +36,63 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
 
   String _avatarImg = 'assets/images/user_avatar.png';
   String _nameEn = 'unknown';
+  File? _image;
+
+  Future<void> pickImage() async {
+    final controller = ref.read(editProfileCtrProvider.notifier);
+    Widget cancelButton = TextButton(
+      child: Text(AppLocalizations.of(context).updated),
+      onPressed: () {
+        updateImage();
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text(AppLocalizations.of(context).removed),
+      onPressed: () {
+        Navigator.pop(context);
+        setState(() {
+          _image = null;
+          _avatarImg = '';
+        });
+        controller.deleteImage();
+      },
+    );
+    Widget endButton = TextButton(
+      child: Text(AppLocalizations.of(context).canceled),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(AppLocalizations.of(context).image_title),
+      content: Text(AppLocalizations.of(context).update_image),
+      actions: [
+        cancelButton,
+        continueButton,
+        endButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  Future<void> updateImage() async {
+    final XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) return;
+    final File image = File(pickedFile.path);
+    setState(() {
+      _image = image;
+    });
+  }
 
   @override
   void initState() {
@@ -63,7 +123,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
     super.dispose();
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     FocusManager.instance.primaryFocus?.unfocus();
 
     final name = _name.text;
@@ -94,6 +154,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
     }
 
     final controller = ref.read(editProfileCtrProvider.notifier);
+    if (_image != null) {
+      _avatarImg = (await controller.doUploadfile(_image!))!;
+    }
     controller.doEditProfile(name, phone, birth, address).then((value) {
       if (value == true) {
         showToastMessage(AppLocalizations.of(context).updatedProfileSuccess);
@@ -110,7 +173,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
     final state = ref.watch(editProfileCtrProvider);
     final profile = state.value;
     print('==========================================');
-    print(state.toString());
+
     final spacer = Flexible(child: SizedBox(height: 20.h));
 
     return Scaffold(
@@ -152,25 +215,40 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Flexible(child: SizedBox(height: 160.h)),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                        color: kColorAvatarBorder, width: 1.0),
-                                  ),
-                                  child: CircleAvatar(
-                                    radius: 165.h,
-                                    backgroundColor: Colors.white,
-                                    backgroundImage: AssetImage(_avatarImg),
-                                    // foregroundImage: profile != null
-                                    //     ? NetworkImage(profile.profileImage)
-                                    //     : null,
-                                    foregroundImage: NetworkImage(_avatarImg),
-                                    onForegroundImageError:
-                                        (exception, stackTrace) {
-                                      print(
-                                          'onForegroundImageError: $exception');
-                                    },
+                                GestureDetector(
+                                  onTap: () {
+                                    pickImage();
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          color: kColorAvatarBorder,
+                                          width: 1.0),
+                                    ),
+                                    child: _image == null
+                                        ? CircleAvatar(
+                                            radius: 165.h,
+                                            backgroundColor: Colors.white,
+                                            backgroundImage:
+                                                AssetImage(_avatarImg),
+                                            // foregroundImage: profile != null
+                                            //     ? NetworkImage(profile.profileImage)
+                                            //     : null,
+                                            foregroundImage:
+                                                NetworkImage(_avatarImg),
+                                            onForegroundImageError:
+                                                (exception, stackTrace) {
+                                              print(
+                                                  'onForegroundImageError: $exception');
+                                            },
+                                          )
+                                        : CircleAvatar(
+                                            radius: 165.h,
+                                            backgroundColor: Colors.white,
+                                            backgroundImage:
+                                                FileImage(File(_image!.path)),
+                                          ),
                                   ),
                                 ),
                                 Flexible(child: SizedBox(height: 30.h)),
