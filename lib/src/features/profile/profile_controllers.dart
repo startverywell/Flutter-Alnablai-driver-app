@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:alnabali_driver/src/features/profile/profile.dart';
+import 'package:alnabali_driver/src/features/profile/supervisor.dart';
 import 'package:alnabali_driver/src/features/profile/profile_repository.dart';
 import 'dart:developer' as developer;
 
@@ -105,10 +106,39 @@ class EditProfileController extends StateNotifier<AsyncValue<Profile?>> {
 
     return nState;
   }
+
+  // Future
 }
 
 final editProfileCtrProvider = StateNotifierProvider.autoDispose<
     EditProfileController, AsyncValue<Profile?>>((ref) {
   return EditProfileController(
+      profileRepo: ref.watch(profileRepositoryProvider));
+});
+
+// * ---------------------------------------------------------------------------
+// * SuperVisorController
+// * ---------------------------------------------------------------------------
+
+class SuperVisorController extends StateNotifier<AsyncValue<SuperVisorList>> {
+  SuperVisorController({required this.profileRepo})
+      : super(const AsyncData([]));
+
+  final ProfileRepository profileRepo;
+
+  Future<void> doFetchSuperVisors() async {
+    state = const AsyncValue.loading();
+    final newState =
+        await AsyncValue.guard(() => profileRepo.doFetchSuperVisors());
+
+    if (mounted) {
+      state = newState;
+    }
+  }
+}
+
+final superVisorCtrProvider = StateNotifierProvider.autoDispose<
+    SuperVisorController, AsyncValue<SuperVisorList>>((ref) {
+  return SuperVisorController(
       profileRepo: ref.watch(profileRepositoryProvider));
 });

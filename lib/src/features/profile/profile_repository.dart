@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:alnabali_driver/src/exceptions/app_exception.dart';
 import 'package:alnabali_driver/src/features/auth/auth_repository.dart';
 import 'package:alnabali_driver/src/features/profile/profile.dart';
+import 'package:alnabali_driver/src/features/profile/supervisor.dart';
 import 'package:alnabali_driver/src/network/dio_client.dart';
 import 'package:alnabali_driver/src/utils/in_memory_store.dart';
 
@@ -114,6 +115,24 @@ class ProfileRepository {
     authRepo.doLogOut();
 
     return null;
+  }
+
+  //%-------------------------getSuperVisor----------------------------
+  SuperVisorList _visors = [];
+  Future<SuperVisorList> doFetchSuperVisors() async {
+    dynamic data = await DioClient.doFetchSuperVisors();
+    final result = data['supervisor'];
+    if (result is List) {
+      try {
+        _visors = result.map((data) => SuperVisor.fromMap(data)).toList();
+        developer.log('doFetchNotifs() src=${_visors.toString()}');
+      } catch (e) {
+        developer.log('doFetchNotifs() error=$e');
+      }
+      return _visors;
+    } else {
+      throw UnimplementedError;
+    }
   }
 }
 

@@ -9,6 +9,7 @@ import 'package:alnabali_driver/src/features/auth/forget_pwd_screen.dart';
 import 'package:alnabali_driver/src/features/auth/login_screen.dart';
 import 'package:alnabali_driver/src/features/profile/change_password_screen.dart';
 import 'package:alnabali_driver/src/features/profile/edit_profile_screen.dart';
+import 'package:alnabali_driver/src/features/profile/supervisor_call_screen.dart';
 import 'package:alnabali_driver/src/features/trip/home_screen.dart';
 import 'package:alnabali_driver/src/features/trip/trip_detail_screen.dart';
 import 'package:alnabali_driver/src/features/trip/trip_nav_screen.dart';
@@ -23,6 +24,7 @@ enum AppRoute {
   tripNavigation,
   editProfile,
   changePwd,
+  supervisorCall
 }
 
 final goRouterProvider = Provider<GoRouter>((ref) {
@@ -106,6 +108,15 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           key: state.pageKey,
           fullscreenDialog: true,
           child: const ChangePasswordScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/supervisor_call',
+        name: AppRoute.supervisorCall.name,
+        pageBuilder: (context, state) => MaterialPage(
+          key: state.pageKey,
+          fullscreenDialog: true,
+          child: const SuperVisorCallScreen(),
         ),
       ),
     ],

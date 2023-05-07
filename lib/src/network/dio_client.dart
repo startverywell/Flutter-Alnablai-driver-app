@@ -367,4 +367,22 @@ class DioClient {
       throw errorMessage;
     }
   }
+
+  // * GET '/supervisor/all'
+
+  static Future<dynamic> doFetchSuperVisors() async {
+    final token = await _getToken();
+    var dio = Dio(_baseOptions);
+    try {
+      final response = await dio.get('/supervisor/all',
+          options: Options(headers: {'X-CSRF-TOKEN': token}));
+      return response.data;
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        // handle unauthorized error
+      } else {
+        throw e.message; // let DioExceptions handle other errors
+      }
+    }
+  }
 }

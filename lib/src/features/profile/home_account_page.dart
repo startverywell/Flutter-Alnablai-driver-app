@@ -268,7 +268,10 @@ class _HomeAccountPageState extends ConsumerState<HomeAccountPage>
                         ),
                         Flexible(child: SizedBox(height: 10.h)),
                         TextButton(
-                          onPressed: state.isLoading ? null : () {},
+                          onPressed: state.isLoading
+                              ? null
+                              : () => context
+                                  .pushNamed(AppRoute.supervisorCall.name),
                           style: btnStyle,
                           child: Container(
                             alignment: Alignment.center,
