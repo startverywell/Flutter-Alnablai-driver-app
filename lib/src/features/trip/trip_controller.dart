@@ -2,7 +2,6 @@
 
 import 'package:alnabali_driver/src/features/trip/transaction.dart';
 import 'package:alnabali_driver/src/features/trip/trips_list_controller.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:alnabali_driver/src/constants/app_constants.dart';
@@ -31,14 +30,6 @@ class TripController extends StateNotifier<AsyncValue<bool>> {
     }
 
     return newState.value;
-  }
-
-  // * update location request must be done at behind. (silently)
-  Future<bool> doUpdateLocation(double lat, double lon, String tripId) async {
-    final newState = await AsyncValue.guard(
-        () => tripsRepo.doUpdateLocation(lat, lon, tripId));
-
-    return newState.hasValue;
   }
 
   void saveToken(String token) async {
@@ -96,4 +87,39 @@ final transCtrProvider = StateNotifierProvider.autoDispose<TransListController,
   } else {
     return TransListController(tripsRepo: ref.watch(pastTripsRepoProvider));
   }
+});
+
+// * ---------------------------------------------------------------------------
+
+class LocationController extends StateNotifier<AsyncValue<DriverLocation?>> {
+  LocationController({
+    required this.tripsRepo,
+  }) : super(const AsyncData(null));
+
+  final TripsRepository tripsRepo;
+  DriverLocation? get currLocation => tripsRepo.currLocation;
+  // * get location data. (silently)
+  Future<void> getDriverLocation() async {
+    print('===================aaaaaaaaaaa======');
+    state = const AsyncValue.loading();
+    final newState =
+        await AsyncValue.guard(() => tripsRepo.getDriverLocation());
+    if (mounted) {
+      print(newState.value);
+      state = newState;
+    }
+  }
+
+  // * update location request must be done at behind. (silently)
+  Future<bool> doUpdateLocation(double lat, double lon, String tripId) async {
+    final newState = await AsyncValue.guard(
+        () => tripsRepo.doUpdateLocation(lat, lon, tripId));
+
+    return newState.hasValue;
+  }
+}
+
+final localtionCtrProvider = StateNotifierProvider.autoDispose<
+    LocationController, AsyncValue<DriverLocation?>>((ref) {
+  return LocationController(tripsRepo: ref.watch(pastTripsRepoProvider));
 });

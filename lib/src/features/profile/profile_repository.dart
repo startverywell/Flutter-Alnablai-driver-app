@@ -33,7 +33,6 @@ class ProfileRepository {
     } catch (e) {
       developer.log('doGetProfile222() error=$e');
     }
-    print('=================================');
     try {
       _profileState.value = Profile.fromMap(data);
     } catch (e) {

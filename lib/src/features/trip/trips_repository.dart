@@ -23,7 +23,10 @@ class TripsRepository {
 
   final TripKind repoType;
   final _trips = InMemoryStore<TripList>([]);
-  final _transactions = InMemoryStore<trans.TransactionList>([]);
+
+  final _locationState = InMemoryStore<DriverLocation?>(null);
+  Stream<DriverLocation?> profileStateChanges() => _locationState.stream;
+  DriverLocation? get currLocation => _locationState.value;
 
   Trip? getTripInfo(String tripId) {
     final searched = _trips.value.where((t) => t.id == tripId).toList();
@@ -130,6 +133,19 @@ class TripsRepository {
     }
 
     return false;
+  }
+
+  Future<DriverLocation?> getDriverLocation() async {
+    final data = await DioClient.getDriverLocation(authRepo.uid!);
+    developer.log('getDriverLocation() returned: $data');
+
+    var result = data['position'];
+    try {
+      _locationState.value = DriverLocation.fromMap(result!);
+    } catch (e) {
+      developer.log('doGetProfile() error=$e');
+    }
+    return _locationState.value;
   }
 
   Future<trans.TransactionList> doFetchTransaction(String tripId) async {

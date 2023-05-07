@@ -385,4 +385,25 @@ class DioClient {
       }
     }
   }
+
+  // * POST '/driver-location'
+  static Future<dynamic> getDriverLocation(String id) async {
+    final token = await _getToken();
+
+    var dio = Dio(_baseOptions);
+    dio.options.headers['X-CSRF-TOKEN'] = token;
+    print('-------------------');
+    print(id);
+    try {
+      final response = await dio.post(
+        '/driver-location',
+        data: {'driver_id': id},
+      );
+      print(response);
+      return response.data;
+    } on DioError catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+  }
 }

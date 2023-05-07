@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:intl/intl.dart';
 
@@ -117,3 +118,20 @@ class Trip {
 }
 
 typedef TripList = List<Trip>;
+
+@immutable
+class DriverLocation {
+  const DriverLocation({required this.orgLocation, required this.destLocation});
+
+  final LatLng orgLocation;
+  final LatLng destLocation;
+
+  factory DriverLocation.fromMap(Map<String, dynamic> data) {
+    return DriverLocation(
+      orgLocation: LatLng(double.parse(data['origin_latitude']),
+          double.parse(data['origin_longitude'])),
+      destLocation: LatLng(double.parse(data['destination_latitude']),
+          double.parse(data['destination_longitude'])),
+    );
+  }
+}

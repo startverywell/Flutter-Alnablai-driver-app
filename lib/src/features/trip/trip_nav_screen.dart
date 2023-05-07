@@ -36,9 +36,8 @@ class _NavigationScreenState extends ConsumerState<TripNavScreen> {
   final Completer<GoogleMapController> _controller = Completer();
 
   late Trip trip;
+  late DriverLocation _location;
 
-  LatLng orgLocation = const LatLng(37.4220656, -122.0840897);
-  LatLng destLocation = const LatLng(37.4116103, -122.0713127);
   LocationData? currLocation;
 
   //List<LatLng> polylineCoordinates = [];
@@ -91,8 +90,8 @@ class _NavigationScreenState extends ConsumerState<TripNavScreen> {
 
   Future<void> _getBusPolyline() async {
     final firsPolyline = await _getRoutePolyline(
-      start: orgLocation,
-      finish: destLocation,
+      start: _location.orgLocation,
+      finish: _location.destLocation,
       color: getStatusColor(trip.status),
       id: 'busLine',
     );
@@ -105,7 +104,7 @@ class _NavigationScreenState extends ConsumerState<TripNavScreen> {
     if (trip.status == TripStatus.accepted) {
       final secondPolyline = await _getRoutePolyline(
         start: LatLng(currLocation!.latitude!, currLocation!.longitude!),
-        finish: orgLocation,
+        finish: _location.orgLocation,
         color: Colors.blue,
         id: 'acceptLine',
         width: 4,
@@ -196,14 +195,15 @@ class _NavigationScreenState extends ConsumerState<TripNavScreen> {
     trip =
         ref.read(tripControllerProvider.notifier).getTripInfo(widget.tripId)!;
 
-    _getBusPolyline();
-    _getCurrentLocation();
-    _setCustomMarkerIcon();
+    _location = const DriverLocation(
+        orgLocation: LatLng(9.0764785, 7.3985741),
+        destLocation: LatLng(9.098668, 7.382104));
+    // ref.read(localtionCtrProvider.notifier).getDriverLocation();
 
     _updateTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       //developer.log('Location Update: ${timer.tick}');
       if (currLocation != null) {
-        final tripCtr = ref.read(tripControllerProvider.notifier);
+        final tripCtr = ref.read(localtionCtrProvider.notifier);
         tripCtr.doUpdateLocation(
             currLocation!.latitude!, currLocation!.longitude!, widget.tripId);
       }
@@ -225,8 +225,8 @@ class _NavigationScreenState extends ConsumerState<TripNavScreen> {
       dist = _calcDistance(
         currLocation!.latitude!,
         currLocation!.longitude!,
-        orgLocation.latitude,
-        orgLocation.longitude,
+        _location.orgLocation.latitude,
+        _location.orgLocation.longitude,
       );
       if (dist > 0.2) {
         showNavStatusDialog(context, trip, false);
@@ -236,8 +236,8 @@ class _NavigationScreenState extends ConsumerState<TripNavScreen> {
       dist = _calcDistance(
         currLocation!.latitude!,
         currLocation!.longitude!,
-        destLocation.latitude,
-        destLocation.longitude,
+        _location.destLocation.latitude,
+        _location.destLocation.longitude,
       );
       if (dist > 0.2) {
         showNavStatusDialog(context, trip, true);
@@ -296,6 +296,11 @@ class _NavigationScreenState extends ConsumerState<TripNavScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(tripControllerProvider);
 
+    // _location = ref.read(localtionCtrProvider.notifier).currLocation!;
+    _getBusPolyline();
+    _getCurrentLocation();
+    _setCustomMarkerIcon();
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -334,12 +339,12 @@ class _NavigationScreenState extends ConsumerState<TripNavScreen> {
                           markers: {
                             Marker(
                               markerId: const MarkerId("source"),
-                              position: orgLocation,
+                              position: _location.orgLocation,
                               icon: originIcon,
                             ),
                             Marker(
                               markerId: const MarkerId("destination"),
-                              position: destLocation,
+                              position: _location.destLocation,
                               icon: destinationIcon,
                             ),
                             Marker(
