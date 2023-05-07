@@ -35,7 +35,6 @@ class _TripDetailScreenState extends ConsumerState<TripDetailScreen>
     super.initState();
 
     // ignore: avoid_print
-    print('ddddddddd${widget.tripId.toString()}');
     info =
         ref.read(tripControllerProvider.notifier).getTripInfo(widget.tripId)!;
     _tabController = TabController(length: 2, vsync: this);
@@ -129,6 +128,12 @@ class _TripDetailScreenState extends ConsumerState<TripDetailScreen>
                           ),
                         ),
                         Flexible(
+                            child: RefreshIndicator(
+                          onRefresh: () async {
+                            info = ref
+                                .read(tripControllerProvider.notifier)
+                                .getTripInfo(widget.tripId)!;
+                          },
                           child: TabBarView(
                             controller: _tabController,
                             children: [
@@ -173,7 +178,7 @@ class _TripDetailScreenState extends ConsumerState<TripDetailScreen>
                               TransactionView(tripId: info.id),
                             ],
                           ),
-                        ),
+                        )),
                       ],
                     ),
                   ),

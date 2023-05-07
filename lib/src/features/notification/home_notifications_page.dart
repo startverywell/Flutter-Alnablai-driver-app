@@ -1,10 +1,8 @@
 import 'dart:developer' as developer;
-import 'package:alnabali_driver/src/routing/app_router.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 
@@ -59,7 +57,10 @@ class _HomeNotificationsPageState extends ConsumerState<HomeNotificationsPage> {
                     elements: notis,
                     groupBy: (notif) => notif.notifyDate,
                     order: GroupedListOrder.ASC,
-                    // controller: _scrollController,
+                    groupComparator: (value1, value2) =>
+                        value1.compareTo(value2),
+                    itemComparator: (item1, item2) =>
+                        item2.id.compareTo(item1.id),
                     groupSeparatorBuilder: (value) {
                       final now = DateTime.now();
                       final today = DateTime(now.year, now.month, now.day);

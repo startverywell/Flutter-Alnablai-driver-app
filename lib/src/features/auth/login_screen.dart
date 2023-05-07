@@ -17,7 +17,6 @@ import 'package:alnabali_driver/src/widgets/dialogs.dart';
 import 'package:alnabali_driver/src/widgets/login_button.dart';
 import 'package:alnabali_driver/src/widgets/progress_hud.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../trip/home_screen.dart';
 
@@ -227,26 +226,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                       onPressed: () => _submit(),
                     ),
                     Flexible(flex: 1, child: SizedBox(height: 100.h)),
-                    TextButton(
-                      onPressed: () =>
-                          context.goNamed(AppRoute.forgetMobile.name),
-                      child: Text(
-                        AppLocalizations.of(context).forgetPwd,
-                        style: TextStyle(
-                          shadows: [
-                            Shadow(
-                                color: Colors.white, offset: Offset(0, -14.h))
-                          ],
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 37.sp,
-                          color: Colors.transparent,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Colors.white,
-                          decorationThickness: 1.4,
-                        ),
-                      ),
-                    ),
+                    // TextButton(
+                    //   onPressed: () =>
+                    //       context.goNamed(AppRoute.forgetMobile.name),
+                    //   child: Text(
+                    //     AppLocalizations.of(context).forgetPwd,
+                    //     style: TextStyle(
+                    //       shadows: [
+                    //         Shadow(
+                    //             color: Colors.white, offset: Offset(0, -14.h))
+                    //       ],
+                    //       fontFamily: 'Montserrat',
+                    //       fontWeight: FontWeight.w500,
+                    //       fontSize: 37.sp,
+                    //       color: Colors.transparent,
+                    //       decoration: TextDecoration.underline,
+                    //       decorationColor: Colors.white,
+                    //       decorationThickness: 1.4,
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
