@@ -198,6 +198,19 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
                   ),
                 ),
                 Expanded(
+                    child: RefreshIndicator(
+                  onRefresh: () async {
+                    var profile =
+                        ref.read(editProfileCtrProvider.notifier).currProfile;
+                    if (profile != null) {
+                      _name.text = profile.nameEN;
+                      _phone.text = profile.phone;
+                      _birthday.text = profile.birthday;
+                      _address.text = profile.address;
+                      _avatarImg = profile.profileImage;
+                      _nameEn = profile.nameEN;
+                    }
+                  },
                   child: Stack(
                     alignment: AlignmentDirectional.topCenter,
                     children: [
@@ -332,7 +345,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
                       ),
                     ],
                   ),
-                ),
+                )),
               ],
             ),
           ),
