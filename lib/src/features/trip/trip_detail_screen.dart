@@ -128,12 +128,6 @@ class _TripDetailScreenState extends ConsumerState<TripDetailScreen>
                           ),
                         ),
                         Flexible(
-                            child: RefreshIndicator(
-                          onRefresh: () async {
-                            info = ref
-                                .read(tripControllerProvider.notifier)
-                                .getTripInfo(widget.tripId)!;
-                          },
                           child: TabBarView(
                             controller: _tabController,
                             children: [
@@ -178,7 +172,7 @@ class _TripDetailScreenState extends ConsumerState<TripDetailScreen>
                               TransactionView(tripId: info.id),
                             ],
                           ),
-                        )),
+                        ),
                       ],
                     ),
                   ),

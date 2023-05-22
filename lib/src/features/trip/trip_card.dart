@@ -375,41 +375,45 @@ class _TripCardState extends State<TripCard> {
           "http://167.86.102.230/alnabali/public/images/admin/client_default.png";
     }
     return GestureDetector(
-      onTap: () {
-        if (widget.showDetail) {
-          // here is in trip-detail-screen.
-          if (widget.info.status == TripStatus.accepted ||
-              widget.info.status == TripStatus.started) {
-            context.replaceNamed(
-              AppRoute.tripNavigation.name,
+        onTap: () {
+          if (widget.showDetail) {
+            // here is in trip-detail-screen.
+            if (widget.info.status == TripStatus.accepted ||
+                widget.info.status == TripStatus.started) {
+              context.replaceNamed(
+                AppRoute.tripNavigation.name,
+                params: {'tripId': widget.info.id},
+              );
+            }
+          } else {
+            // here is in trip-list-view.
+            context.pushNamed(
+              AppRoute.tripDetail.name,
               params: {'tripId': widget.info.id},
             );
           }
-        } else {
-          // here is in trip-list-view.
-          context.pushNamed(
-            AppRoute.tripDetail.name,
-            params: {'tripId': widget.info.id},
-          );
-        }
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 60.w, vertical: 40.h),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.grey.withOpacity(0.5)),
-          borderRadius: BorderRadius.all(Radius.circular(40.w)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: const Offset(0, 2),
+        },
+        child: RefreshIndicator(
+          onRefresh: () async {
+            print('[[[[[[[[[[[[[[[object]]]]]]]]]]]]]]]');
+          },
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 60.w, vertical: 40.h),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.grey.withOpacity(0.5)),
+              borderRadius: BorderRadius.all(Radius.circular(40.w)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: _buildCardContents(),
-      ),
-    );
+            child: _buildCardContents(),
+          ),
+        ));
   }
 }

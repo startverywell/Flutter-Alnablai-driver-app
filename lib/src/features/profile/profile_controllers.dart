@@ -7,6 +7,8 @@ import 'package:alnabali_driver/src/features/profile/supervisor.dart';
 import 'package:alnabali_driver/src/features/profile/profile_repository.dart';
 import 'dart:developer' as developer;
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 // * ---------------------------------------------------------------------------
 // * HomeAccountController
 // * ---------------------------------------------------------------------------
@@ -39,6 +41,33 @@ final homeAccountCtrProvider = StateNotifierProvider.autoDispose<
 });
 
 final langCodeProvider = StateProvider<String>((ref) => 'en');
+// final langCodeProvider = StateProvider<String>((ref) async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   // Return a Future<String>
+//   String? boolValue = prefs.getString('lang');
+//   print(boolValue);
+//   return boolValue ?? 'en';
+// }).future.then((value) => value!); // Convert the Future<String> to a String using .then() method
+
+// getLangValue() async {
+//   final langCode = context.read(langCodeProvider).state;
+//   return langCode;
+// }
+
+// getLangValue() async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   //Return bool
+//   String? boolValue = prefs.getString('lang');
+//   print(boolValue);
+//   return boolValue ?? 'en';
+// }
+
+// final langCodeProvider = StateProvider<String>((ref) {
+//   final prefs = SharedPreferences.getInstance();
+//   // Try to get the language code from the preferences. If it's not available, return a default value.
+//   final langCode = prefs.getString('lang') ?? 'en';
+//   return langCode;
+// });
 
 // * ---------------------------------------------------------------------------
 // * ChangePasswordController

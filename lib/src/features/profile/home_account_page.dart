@@ -16,6 +16,7 @@ import 'package:alnabali_driver/src/widgets/dialogs.dart';
 import 'package:alnabali_driver/src/widgets/progress_hud.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeAccountPage extends ConsumerStatefulWidget {
   const HomeAccountPage({Key? key}) : super(key: key);
@@ -36,10 +37,21 @@ class _HomeAccountPageState extends ConsumerState<HomeAccountPage>
     super.initState();
     _initPackageInfo();
     _tabController = TabController(length: 2, vsync: this);
-    final curr = ref.read(langCodeProvider);
-    _tabController.index = curr == 'en' ? 0 : 1;
+    // final curr = ref.read(langCodeProvider);
+    // _tabController.index = curr == 'en' ? 0 : 1;
+    setLang();
 
     ref.read(homeAccountCtrProvider.notifier).doGetProfile();
+  }
+
+  setLang() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final currentLang = sharedPreferences.getString("lang");
+    if (currentLang == 'en') {
+      _tabController.index = 0;
+    } else {
+      _tabController.index = 1;
+    }
   }
 
   Future<void> _initPackageInfo() async {
@@ -230,9 +242,14 @@ class _HomeAccountPageState extends ConsumerState<HomeAccountPage>
                               Tab(text: 'English'.hardcoded),
                               Tab(text: 'عربى'.hardcoded),
                             ],
-                            onTap: (index) {
+                            onTap: (index) async {
                               ref.read(langCodeProvider.state).state =
                                   index == 0 ? 'en' : 'ar';
+                              SharedPreferences sharedPreferences =
+                                  await SharedPreferences.getInstance();
+                              sharedPreferences.setString(
+                                  'lang', index == 0 ? 'en' : 'ar');
+                              setState(() {});
                             },
                           ),
                         ),
@@ -292,8 +309,7 @@ class _HomeAccountPageState extends ConsumerState<HomeAccountPage>
                                       ref
                                           .read(homeAccountCtrProvider.notifier)
                                           .doLogout();
-
-                                      context.goNamed(AppRoute.login.name);
+                                      context.pushNamed(AppRoute.login.name);
                                     }
                                   });
                                 },
