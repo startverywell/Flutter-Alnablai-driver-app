@@ -136,7 +136,7 @@ class NotifCard extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(vertical: 20.h),
             child: Text(
-              info.getNotifyTimeText(),
+              info.notifyTime,
               style: TextStyle(
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.w600,

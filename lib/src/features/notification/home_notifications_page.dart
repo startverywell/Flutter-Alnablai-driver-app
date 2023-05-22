@@ -56,11 +56,7 @@ class _HomeNotificationsPageState extends ConsumerState<HomeNotificationsPage> {
                 ? GroupedListView(
                     elements: notis,
                     groupBy: (notif) => notif.notifyDate,
-                    order: GroupedListOrder.ASC,
-                    groupComparator: (value1, value2) =>
-                        value1.compareTo(value2),
-                    itemComparator: (item1, item2) =>
-                        item2.id.compareTo(item1.id),
+                    order: GroupedListOrder.DESC,
                     groupSeparatorBuilder: (value) {
                       final now = DateTime.now();
                       final today = DateTime(now.year, now.month, now.day);
@@ -72,12 +68,13 @@ class _HomeNotificationsPageState extends ConsumerState<HomeNotificationsPage> {
                       final String dateText;
                       if (valueDate == today) {
                         dateText =
-                            'Today, ${DateFormat('dd/mm/yyyy').format(value)}';
+                            'Today, ${DateFormat('dd/MM/yyyy').format(valueDate)}';
                       } else if (valueDate == yesterday) {
                         dateText =
-                            'Yesterday, ${DateFormat('dd/mm/yyyy').format(value)}';
+                            'Yesterday, ${DateFormat('dd/MM/yyyy').format(valueDate)}';
                       } else {
-                        dateText = DateFormat('E, dd/mm/yyyy').format(value);
+                        dateText =
+                            DateFormat('E, dd/MM/yyyy').format(valueDate);
                       }
                       return Container(
                         margin: EdgeInsets.symmetric(

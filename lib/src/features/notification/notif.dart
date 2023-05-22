@@ -18,6 +18,7 @@ class Notif {
       required this.driverName,
       required this.status,
       required this.notifyDate,
+      required this.notifyTime,
       required this.clientAvatar,
       required this.dispTripId,
       required this.readAt});
@@ -35,13 +36,16 @@ class Notif {
   final String clientAvatar;
   final String dispTripId;
   final String readAt;
+  final String notifyTime;
 
   String getNotifTitle() => '#$dispTripId';
   String getNotifyTimeText() => DateFormat('hh:mm a').format(notifyDate);
 
   factory Notif.fromMap(Map<String, dynamic> data) {
     var status = kStatusMapper[data['status']] ?? TripStatus.pending;
-
+    String time = data['updated_at'];
+    time = time.split("T")[1];
+    time = time.substring(0, 5);
     return Notif(
         id: data['id'].toString(),
         tripId: data['daily_trip_id'].toString(),
@@ -50,11 +54,12 @@ class Notif {
         orgName: data['origin_name'],
         destName: data['destination_name'],
         message: data['message'] ?? '',
-        notifyDate: DateFormat('yyyy-mm-dd').parse('${data['created_at']}'),
+        notifyDate: DateFormat('yyyy-MM-dd').parse('${data['created_at']}'),
         driverName: data['driver_name'].toString(),
         status: status,
         clientAvatar: data['client_avatar'],
         dispTripId: data['disp_trip_id'],
+        notifyTime: time,
         readAt: data['read_at'] ?? '');
   }
 

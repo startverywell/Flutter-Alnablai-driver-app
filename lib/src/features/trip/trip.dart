@@ -47,10 +47,10 @@ class Trip {
 
   String getTripTitleShort() => '# $id';
 
-  String getStartDateStr() => DateFormat('E, dd/mm/yyyy').format(startDate);
+  String getStartDateStr() => DateFormat('dd/MM/yyyy').format(startDate);
   String getStartTimeStr() => DateFormat('hh:mm a').format(startDate);
 
-  String getEndDateStr() => DateFormat('E, dd/mm/yyyy').format(endDate);
+  String getEndDateStr() => DateFormat('dd/MM/yyyy').format(endDate);
   String getEndTimeStr() => DateFormat('hh:mm a').format(endDate);
 
   String getDurationStr() {
@@ -73,9 +73,9 @@ class Trip {
       tripName: data['trip_name'],
       busNo: data['bus_no'],
       busSizeId: data['bus_size_id'],
-      startDate: DateFormat('y-m-d h:mm a')
+      startDate: DateFormat('yyyy-MM-dd h:mm a')
           .parse('${data['start_date']} ${data['start_time']}'),
-      endDate: DateFormat('y-m-d h:mm a')
+      endDate: DateFormat('yyyy-MM-dd h:mm a')
           .parse('${data['end_date']} ${data['end_time']}'),
       orgArea: data['origin_area'],
       orgCity: data['origin_city'],

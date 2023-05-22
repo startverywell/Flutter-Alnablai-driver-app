@@ -164,7 +164,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                         //validator: (username) => emailErrorText(username ?? ''),
                         autocorrect: false,
                         textInputAction: TextInputAction.next,
-                        keyboardType: TextInputType.emailAddress,
+                        keyboardType: TextInputType.name,
                         cursorColor: Colors.white,
                         onEditingComplete: () => _emailEditingComplete(),
                         inputFormatters: <TextInputFormatter>[
