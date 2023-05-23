@@ -37,8 +37,6 @@ class _HomeAccountPageState extends ConsumerState<HomeAccountPage>
     super.initState();
     _initPackageInfo();
     _tabController = TabController(length: 2, vsync: this);
-    // final curr = ref.read(langCodeProvider);
-    // _tabController.index = curr == 'en' ? 0 : 1;
     setLang();
 
     ref.read(homeAccountCtrProvider.notifier).doGetProfile();
@@ -243,13 +241,9 @@ class _HomeAccountPageState extends ConsumerState<HomeAccountPage>
                               Tab(text: 'عربى'.hardcoded),
                             ],
                             onTap: (index) async {
-                              ref.read(langCodeProvider.state).state =
-                                  index == 0 ? 'en' : 'ar';
-                              SharedPreferences sharedPreferences =
-                                  await SharedPreferences.getInstance();
-                              sharedPreferences.setString(
-                                  'lang', index == 0 ? 'en' : 'ar');
-                              setState(() {});
+                              ref
+                                  .read(langCodeProvider.notifier)
+                                  .saveLang(index == 0 ? 'en' : 'ar');
                             },
                           ),
                         ),

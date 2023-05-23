@@ -15,7 +15,9 @@ class LoginController extends StateNotifier<AsyncValue<bool>> {
   //bool isAuthenticated() => authRepo.uid
 
   Future<bool> doLogin(String email, String password) async {
-    if (authRepo.uid != null && authRepo.uid!.isNotEmpty && authRepo.uid != 'not') {
+    if (authRepo.uid != null &&
+        authRepo.uid!.isNotEmpty &&
+        authRepo.uid != 'not') {
       // already logined!
       state = const AsyncData(true);
       return true;
@@ -43,7 +45,6 @@ class LoginController extends StateNotifier<AsyncValue<bool>> {
   Future<String> getLoggedInID() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String str = prefs.getString('login_id') ?? 'not';
-    print("dogdog$str");
     authRepo.setUid = str;
     return str;
   }

@@ -40,34 +40,23 @@ final homeAccountCtrProvider = StateNotifierProvider.autoDispose<
       profileRepo: ref.watch(profileRepositoryProvider));
 });
 
-final langCodeProvider = StateProvider<String>((ref) => 'en');
-// final langCodeProvider = StateProvider<String>((ref) async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   // Return a Future<String>
-//   String? boolValue = prefs.getString('lang');
-//   print(boolValue);
-//   return boolValue ?? 'en';
-// }).future.then((value) => value!); // Convert the Future<String> to a String using .then() method
+final langCodeProvider = StateNotifierProvider<LangCodeNotifier, String>(
+    (ref) => LangCodeNotifier());
 
-// getLangValue() async {
-//   final langCode = context.read(langCodeProvider).state;
-//   return langCode;
-// }
+class LangCodeNotifier extends StateNotifier<String> {
+  LangCodeNotifier() : super('en');
+  loadLangCode() async {
+    final sharedPrefs = await SharedPreferences.getInstance();
+    final langCode = sharedPrefs.getString('lang') ?? "en";
+    state = langCode;
+  }
 
-// getLangValue() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   //Return bool
-//   String? boolValue = prefs.getString('lang');
-//   print(boolValue);
-//   return boolValue ?? 'en';
-// }
-
-// final langCodeProvider = StateProvider<String>((ref) {
-//   final prefs = SharedPreferences.getInstance();
-//   // Try to get the language code from the preferences. If it's not available, return a default value.
-//   final langCode = prefs.getString('lang') ?? 'en';
-//   return langCode;
-// });
+  saveLang(String lang) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString('lang', lang);
+    state = lang;
+  }
+}
 
 // * ---------------------------------------------------------------------------
 // * ChangePasswordController

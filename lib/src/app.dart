@@ -13,6 +13,7 @@ class AlnabaliDriverApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(langCodeProvider.notifier).loadLangCode();
     final langCode = ref.watch(langCodeProvider);
 
     return ScreenUtilInit(
