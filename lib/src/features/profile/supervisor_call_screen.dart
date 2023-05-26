@@ -35,46 +35,54 @@ class _SuperVisorCallScreen extends ConsumerState<SuperVisorCallScreen> {
     return Scaffold(
       extendBody: true,
       body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            ref.read(superVisorCtrProvider.notifier).doFetchSuperVisors();
+            await Future.delayed(Duration(seconds: 2));
+          },
           child: Container(
-              width: ScreenUtil().screenWidth,
-              height: ScreenUtil().screenHeight,
-              decoration: kBgDecoration,
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 30.h),
-                      height: 260.h,
-                      child: Image.asset('assets/images/home_icon.png'),
-                    ),
-                    Expanded(
-                        child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(90.w),
-                              ),
-                            ),
-                            child: ProgressHUD(
+            width: ScreenUtil().screenWidth,
+            height: ScreenUtil().screenHeight,
+            decoration: kBgDecoration,
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 30.h),
+                    height: 260.h,
+                    child: Image.asset('assets/images/home_icon.png'),
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(90.w),
+                        ),
+                      ),
+                      child: ProgressHUD(
+                        inAsyncCall: state.isLoading,
+                        child: ListView.separated(
+                          itemCount: visors?.length ?? 0,
+                          itemBuilder: (BuildContext context, int itemIdx) {
+                            return ProgressHUD(
                               inAsyncCall: state.isLoading,
-                              child: ListView.separated(
-                                itemCount: visors?.length ?? 0,
-                                itemBuilder:
-                                    (BuildContext context, int itemIdx) {
-                                  return ProgressHUD(
-                                    inAsyncCall: state.isLoading,
-                                    child: SuperVisorCard(
-                                      info: visors!.elementAt(itemIdx),
-                                      onPressed: () {},
-                                    ),
-                                  );
-                                },
-                                separatorBuilder:
-                                    (BuildContext context, int index) =>
-                                        SizedBox(height: 30.h),
+                              child: SuperVisorCard(
+                                info: visors!.elementAt(itemIdx),
+                                onPressed: () {},
                               ),
-                            )))
-                  ]))),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) =>
+                              SizedBox(height: 30.h),
+                        ),
+                      ),
+                    ),
+                  )
+                ]),
+          ),
+        ),
+      ),
       bottomNavigationBar: SafeArea(
         child: Container(
           margin: EdgeInsets.all(24.h),

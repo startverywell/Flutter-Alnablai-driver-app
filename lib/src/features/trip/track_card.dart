@@ -109,15 +109,15 @@ class _TrackCardState extends State<TrackCard> {
     // int j = 1;
     for (final t in widget.info) {
       // if (j <= 2) {
-        print("status_status" + t.newStatus.toString());
-        widgetList.add(buildTrackRow(
-          context,
-          t.newStatus,
-          t.getUpdateTimeStr(),
-          trackColor,
-          i == widget.info.length,
-          // i == 2,
-        ));
+      print("status_status" + t.newStatus.toString());
+      widgetList.add(buildTrackRow(
+        context,
+        t.newStatus,
+        t.getUpdateTimeStr(),
+        trackColor,
+        i == widget.info.length,
+        // i == 2,
+      ));
       // }
       i++;
       // j++;

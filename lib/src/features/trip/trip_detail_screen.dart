@@ -84,97 +84,111 @@ class _TripDetailScreenState extends ConsumerState<TripDetailScreen>
                       topLeft: Radius.circular(90.w),
                     ),
                   ),
-                  child: ProgressHUD(
-                    inAsyncCall: state.isLoading,
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 100.h,
-                          margin: EdgeInsets.only(
-                            left: 250.w,
-                            right: 250.w,
-                            top: 60.h,
-                          ),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft,
-                              colors: [
-                                kColorPrimaryBlue,
-                                Color(0xFF0083A6),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: TabBar(
-                            controller: _tabController,
-                            indicator: const BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(100)),
-                              color: kColorPrimaryBlue,
-                            ),
-                            labelColor: Colors.white,
-                            unselectedLabelColor: Colors.white,
-                            labelStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 36.sp,
-                            ),
-                            tabs: [
-                              Tab(text: AppLocalizations.of(context).details2),
-                              Tab(text: AppLocalizations.of(context).tracking),
-                            ],
-                            onTap: (index) {},
-                          ),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 100.h,
+                        margin: EdgeInsets.only(
+                          left: 250.w,
+                          right: 250.w,
+                          top: 60.h,
                         ),
-                        Flexible(
-                          child: TabBarView(
-                            controller: _tabController,
-                            children: [
-                              Column(
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [
+                              kColorPrimaryBlue,
+                              Color(0xFF0083A6),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: TabBar(
+                          controller: _tabController,
+                          indicator: const BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(100)),
+                            color: kColorPrimaryBlue,
+                          ),
+                          labelColor: Colors.white,
+                          unselectedLabelColor: Colors.white,
+                          labelStyle: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 36.sp,
+                          ),
+                          tabs: [
+                            Tab(text: AppLocalizations.of(context).details2),
+                            Tab(text: AppLocalizations.of(context).tracking),
+                          ],
+                          onTap: (index) {},
+                        ),
+                      ),
+                      Flexible(
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: [
+                            RefreshIndicator(
+                              child: ListView(
                                 children: [
-                                  Container(
-                                    height: 573.h,
-                                    margin: EdgeInsets.only(
-                                        top: 20.h, bottom: 60.h),
-                                    child: Image.asset(
-                                        'assets/images/trip_detail.png'),
-                                  ),
-                                  TripCard(
-                                    info: info,
-                                    onYesNo: (id, targetStatus, extra) {
-                                      // ? this code duplicated with TripsListView...
-                                      successCallback(value) {
-                                        if (value == true) {
-                                          showOkayDialog(
-                                              context, info, targetStatus);
-                                        }
+                                  Column(
+                                    children: [
+                                      Container(
+                                        height: 573.h,
+                                        margin: EdgeInsets.only(
+                                            top: 20.h, bottom: 60.h),
+                                        child: Image.asset(
+                                            'assets/images/trip_detail.png'),
+                                      ),
+                                      TripCard(
+                                        info: info,
+                                        onYesNo: (id, targetStatus, extra) {
+                                          // ? this code duplicated with TripsListView...
+                                          successCallback(value) {
+                                            if (value == true) {
+                                              showOkayDialog(
+                                                  context, info, targetStatus);
+                                            }
 
-                                        // * rebuild detail screen for card update.
-                                        setState(() {
-                                          info = ref
+                                            // * rebuild detail screen for card update.
+                                            setState(() {
+                                              info = ref
+                                                  .read(tripControllerProvider
+                                                      .notifier)
+                                                  .getTripInfo(widget.tripId)!;
+                                            });
+                                          }
+
+                                          ref
                                               .read(tripControllerProvider
                                                   .notifier)
-                                              .getTripInfo(widget.tripId)!;
-                                        });
-                                      }
-
-                                      ref
-                                          .read(tripControllerProvider.notifier)
-                                          .doChangeTrip(
-                                              info, targetStatus, extra)
-                                          .then(successCallback);
-                                    },
-                                    showDetail: true,
+                                              .doChangeTrip(
+                                                  info, targetStatus, extra)
+                                              .then(successCallback);
+                                        },
+                                        showDetail: true,
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                              TransactionView(tripId: info.id),
-                            ],
-                          ),
+                              onRefresh: () async {
+                                await Future.delayed(Duration(seconds: 2));
+                              },
+                            ),
+                            RefreshIndicator(
+                              child: ListView(
+                                children: [TransactionView(tripId: info.id)],
+                              ),
+                              onRefresh: () async {
+                                await Future.delayed(Duration(seconds: 2));
+                              },
+                            )
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),

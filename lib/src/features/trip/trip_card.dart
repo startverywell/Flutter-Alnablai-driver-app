@@ -13,6 +13,8 @@ import 'package:alnabali_driver/src/widgets/gradient_button.dart';
 import 'package:alnabali_driver/src/widgets/dialogs.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../widgets/progress_hud.dart';
+
 typedef TripCardCallback = void Function(
     Trip info, TripStatus targetStatus, String? extra);
 
@@ -57,9 +59,6 @@ class _TripCardState extends State<TripCard> {
                     "http://167.86.102.230/alnabali/public/images/admin/client_default.png";
               });
             },
-            // backgroundImage:
-            // const AssetImage('assets/images/company_mcdonald\'s.png'),
-            // NetworkImage(widget.info.clientAvatar),
           ),
         ),
         Expanded(
@@ -374,46 +373,48 @@ class _TripCardState extends State<TripCard> {
       avatar =
           "http://167.86.102.230/alnabali/public/images/admin/client_default.png";
     }
+
     return GestureDetector(
-        onTap: () {
-          if (widget.showDetail) {
-            // here is in trip-detail-screen.
-            if (widget.info.status == TripStatus.accepted ||
-                widget.info.status == TripStatus.started) {
-              context.replaceNamed(
-                AppRoute.tripNavigation.name,
-                params: {'tripId': widget.info.id},
-              );
-            }
-          } else {
-            // here is in trip-list-view.
-            context.pushNamed(
-              AppRoute.tripDetail.name,
+      onTap: () {
+        if (widget.showDetail) {
+          // here is in trip-detail-screen.
+          if (widget.info.status == TripStatus.accepted ||
+              widget.info.status == TripStatus.started) {
+            context.replaceNamed(
+              AppRoute.tripNavigation.name,
               params: {'tripId': widget.info.id},
             );
           }
+        } else {
+          // here is in trip-list-view.
+          context.pushNamed(
+            AppRoute.tripDetail.name,
+            params: {'tripId': widget.info.id},
+          );
+        }
+      },
+      child: RefreshIndicator(
+        onRefresh: () async {
+          await Future.delayed(Duration(seconds: 2));
         },
-        child: RefreshIndicator(
-          onRefresh: () async {
-            print('[[[[[[[[[[[[[[[object]]]]]]]]]]]]]]]');
-          },
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 60.w, vertical: 40.h),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey.withOpacity(0.5)),
-              borderRadius: BorderRadius.all(Radius.circular(40.w)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 1,
-                  blurRadius: 1,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: _buildCardContents(),
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 60.w, vertical: 40.h),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.grey.withOpacity(0.5)),
+            borderRadius: BorderRadius.all(Radius.circular(40.w)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 1,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-        ));
+          child: _buildCardContents(),
+        ),
+      ),
+    );
   }
 }
