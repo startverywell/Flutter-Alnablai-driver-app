@@ -55,6 +55,7 @@ class NotifCard extends StatelessWidget {
               ),
               child: Material(
                 borderRadius: borderRadius,
+                color: info.readAt == '' ? Color(0xFFd6ebfc) : Colors.white,
                 child: InkWell(
                   borderRadius: borderRadius,
                   // onTap: await DioClient.doReadAt(info.tripId),
@@ -102,9 +103,7 @@ class NotifCard extends StatelessWidget {
                                   fontFamily: 'Montserrat',
                                   fontWeight: FontWeight.w700,
                                   fontSize: 40.sp,
-                                  color: info.readAt != ''
-                                      ? textColor
-                                      : Colors.grey,
+                                  color: textColor,
                                   // color: textColor,
                                 ),
                               ),
@@ -117,9 +116,7 @@ class NotifCard extends StatelessWidget {
                                   fontFamily: 'Montserrat',
                                   fontWeight: FontWeight.w500,
                                   fontSize: 38.sp,
-                                  color: info.readAt != ''
-                                      ? textColor
-                                      : Colors.grey,
+                                  color: textColor,
                                   // color: textColor,
                                 ),
                               ),
