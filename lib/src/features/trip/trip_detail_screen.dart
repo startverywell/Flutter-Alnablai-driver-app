@@ -174,17 +174,13 @@ class _TripDetailScreenState extends ConsumerState<TripDetailScreen>
                                 ],
                               ),
                               onRefresh: () async {
+                                info = ref
+                                    .read(tripControllerProvider.notifier)
+                                    .getTripInfo(widget.tripId)!;
                                 await Future.delayed(Duration(seconds: 2));
                               },
                             ),
-                            RefreshIndicator(
-                              child: ListView(
-                                children: [TransactionView(tripId: info.id)],
-                              ),
-                              onRefresh: () async {
-                                await Future.delayed(Duration(seconds: 2));
-                              },
-                            )
+                            TransactionView(tripId: info.id),
                           ],
                         ),
                       ),
@@ -196,12 +192,15 @@ class _TripDetailScreenState extends ConsumerState<TripDetailScreen>
           ),
         ),
       ),
-      floatingActionButton: SizedBox(
-        height: 138.h,
-        child: IconButton(
-          onPressed: () => context.pop(),
-          //iconSize: 89.h,
-          icon: Image.asset('assets/images/btn_back.png'),
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(top: 100.h),
+        child: SizedBox(
+          height: 140.h,
+          child: IconButton(
+            onPressed: () => context.pop(),
+            //iconSize: 89.h,
+            icon: Image.asset('assets/images/btn_back.png'),
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,

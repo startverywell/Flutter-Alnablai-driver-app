@@ -315,7 +315,7 @@ class _NavigationScreenState extends ConsumerState<TripNavScreen> {
                 alignment: Alignment.center,
                 margin: EdgeInsets.only(top: 130.h, bottom: 60.h),
                 child: Text(
-                  '${AppLocalizations.of(context).trip} #${widget.tripId}',
+                  '${AppLocalizations.of(context).trip} # ${trip.trip_id}',
                   style: TextStyle(
                     fontFamily: 'Montserrat',
                     fontWeight: FontWeight.w800,
@@ -376,7 +376,7 @@ class _NavigationScreenState extends ConsumerState<TripNavScreen> {
         ),
       ),
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(top: 20.h),
+        padding: EdgeInsets.only(top: 95.h),
         child: SizedBox(
           height: 138.h,
           child: IconButton(

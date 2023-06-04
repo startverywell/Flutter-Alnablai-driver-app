@@ -238,7 +238,7 @@ class _TripCardState extends State<TripCard> {
                     context,
                     widget.info.clientName,
                     widget.info.tripName,
-                    widget.info.id,
+                    widget.info.trip_id,
                     widget.info.status,
                   ).then((value) {
                     if (value == true) {
@@ -286,7 +286,7 @@ class _TripCardState extends State<TripCard> {
                     context,
                     widget.info.clientName,
                     widget.info.tripName,
-                    widget.info.id,
+                    widget.info.trip_id,
                   ).then((value) {
                     if (value != null) {
                       widget.onYesNo(widget.info, TripStatus.rejected, value);
@@ -393,27 +393,22 @@ class _TripCardState extends State<TripCard> {
           );
         }
       },
-      child: RefreshIndicator(
-        onRefresh: () async {
-          await Future.delayed(Duration(seconds: 2));
-        },
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 60.w, vertical: 40.h),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.grey.withOpacity(0.5)),
-            borderRadius: BorderRadius.all(Radius.circular(40.w)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 1,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: _buildCardContents(),
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 60.w, vertical: 40.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.grey.withOpacity(0.5)),
+          borderRadius: BorderRadius.all(Radius.circular(40.w)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
+        child: _buildCardContents(),
       ),
     );
   }

@@ -196,7 +196,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
         ),
       ),
       floatingActionButton: Padding(
-        padding: EdgeInsets.symmetric(vertical: 20.h),
+        padding: EdgeInsets.symmetric(vertical: 95.h),
         child: SizedBox(
           height: 138.h,
           child: IconButton(

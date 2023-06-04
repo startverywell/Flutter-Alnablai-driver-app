@@ -58,12 +58,9 @@ class NotifCard extends StatelessWidget {
                 color: info.readAt == '' ? Color(0xFFd6ebfc) : Colors.white,
                 child: InkWell(
                   borderRadius: borderRadius,
-                  // onTap: await DioClient.doReadAt(info.tripId),
                   onTap: null, //onPressed,
-                  //splashColor: kColorPrimaryBlue.withOpacity(0.1),
-                  //splashFactory: InkSplash.splashFactory,
                   child: Container(
-                    height: 200.h,
+                    height: 250.h,
                     padding:
                         EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
                     child: Row(

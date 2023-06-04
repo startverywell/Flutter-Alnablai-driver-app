@@ -40,11 +40,20 @@ class _TransactionViewState extends ConsumerState<TransactionView> {
 
     final state = ref.watch(transCtrProvider);
 
-    return ProgressHUD(
-      inAsyncCall: state.isLoading,
-      child: (state.value != null && state.value!.isNotEmpty)
-          ? TrackCard(info: state.value!)
-          : const SizedBox(),
+    return RefreshIndicator(
+      child: ListView(
+        children: [
+          ProgressHUD(
+            inAsyncCall: state.isLoading,
+            child: (state.value != null && state.value!.isNotEmpty)
+                ? TrackCard(info: state.value!)
+                : const SizedBox(),
+          )
+        ],
+      ),
+      onRefresh: () async {
+        ref.read(transCtrProvider.notifier).doFetchTransaction(widget.tripId);
+      },
     );
   }
 }

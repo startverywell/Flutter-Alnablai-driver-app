@@ -23,7 +23,7 @@ final yesTextStyle = TextStyle(
 final btnW = 280.w;
 final btnH = 84.h;
 
-Widget _buildDialogTitle(String companyName, String tripName) {
+Widget _buildDialogTitle(String companyName, String tripName, String tripId) {
   return Column(
     mainAxisSize: MainAxisSize.min,
     children: [
@@ -38,6 +38,15 @@ Widget _buildDialogTitle(String companyName, String tripName) {
       ),
       Text(
         tripName,
+        style: TextStyle(
+          fontFamily: 'Montserrat',
+          fontWeight: FontWeight.w500,
+          fontSize: 38.sp,
+          color: kColorPrimaryGrey,
+        ),
+      ),
+      Text(
+        'TRIP # ' + tripId,
         style: TextStyle(
           fontFamily: 'Montserrat',
           fontWeight: FontWeight.w500,
@@ -61,21 +70,25 @@ Future<void> showOkayDialog(
     builder: (BuildContext context) {
       String title = '';
       if (okStatus == TripStatus.accepted) {
-        title = '${AppLocalizations.of(context).youHaveAccepted}${info.id}';
+        title =
+            '${AppLocalizations.of(context).youHaveAccepted}${info.trip_id}';
       } else if (okStatus == TripStatus.rejected) {
-        title = '${AppLocalizations.of(context).youHaveRejected}${info.id}';
+        title =
+            '${AppLocalizations.of(context).youHaveRejected}${info.trip_id}';
       } else if (okStatus == TripStatus.started) {
-        title = '${AppLocalizations.of(context).youHaveStarted}${info.id}';
+        title = '${AppLocalizations.of(context).youHaveStarted}${info.trip_id}';
       } else if (okStatus == TripStatus.finished) {
-        title = '${AppLocalizations.of(context).youHaveFinished}${info.id}';
+        title =
+            '${AppLocalizations.of(context).youHaveFinished}${info.trip_id}';
       } else if (okStatus == TripStatus.canceled) {
-        title = '${AppLocalizations.of(context).youHaveCanceled}${info.id}';
+        title =
+            '${AppLocalizations.of(context).youHaveCanceled}${info.trip_id}';
       }
 
       return AlertDialog(
         shape: dialogShape,
         titlePadding: titlePadding,
-        title: _buildDialogTitle(info.clientName, info.tripName),
+        title: _buildDialogTitle(info.clientName, info.tripName, info.trip_id),
         contentPadding: contentPadding,
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -157,7 +170,7 @@ Future<bool?> showConfirmDialog(
       return AlertDialog(
         shape: dialogShape,
         titlePadding: titlePadding,
-        title: _buildDialogTitle(companyName, tripName),
+        title: _buildDialogTitle(companyName, tripName, tripNo),
         contentPadding: contentPadding,
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -235,7 +248,7 @@ Future<String?> showRejectDialog(
       return AlertDialog(
         shape: dialogShape,
         titlePadding: titlePadding,
-        title: _buildDialogTitle(companyName, tripName),
+        title: _buildDialogTitle(companyName, tripName, tripNo),
         contentPadding: contentPadding,
         content: Column(
           mainAxisSize: MainAxisSize.min,

@@ -352,7 +352,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
         ),
       ),
       floatingActionButton: Padding(
-        padding: EdgeInsets.symmetric(vertical: 30.h),
+        padding: EdgeInsets.symmetric(vertical: 100.h),
         child: SizedBox(
           height: 138.h,
           child: IconButton(

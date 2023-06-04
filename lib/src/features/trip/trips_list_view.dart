@@ -91,51 +91,54 @@ class _TripsListViewState extends ConsumerState<TripsListView>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          children: [
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 20.w),
-              height: 60.h,
-              child: Image.asset('assets/images/home_icon2.png'),
-            ),
-            ButtonsTabBar(
-              controller: _tabCtrler,
-              duration: 0,
-              backgroundColor: kColorPrimaryBlue,
-              unselectedBackgroundColor: Colors.transparent,
-              labelStyle: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w500,
-                fontSize: 26.sp,
+        Padding(
+          padding: EdgeInsets.only(bottom: 30.h),
+          child: Row(
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20.w),
+                height: 60.h,
+                child: Image.asset('assets/images/home_icon2.png'),
               ),
-              unselectedLabelStyle: TextStyle(
-                color: tabColor,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w400,
-                fontSize: 26.sp,
+              ButtonsTabBar(
+                controller: _tabCtrler,
+                duration: 0,
+                backgroundColor: kColorPrimaryBlue,
+                unselectedBackgroundColor: Colors.transparent,
+                labelStyle: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w500,
+                  fontSize: 26.sp,
+                ),
+                unselectedLabelStyle: TextStyle(
+                  color: tabColor,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 26.sp,
+                ),
+                borderWidth: 1,
+                borderColor: kColorPrimaryBlue,
+                unselectedBorderColor: tabColor,
+                radius: 100,
+                height: 70.h,
+                buttonMargin: EdgeInsets.symmetric(horizontal: 4.w),
+                //contentPadding: EdgeInsets.symmetric(horizontal: 8.w),
+                tabs: filterTabs
+                    .map((t) => Tab(text: getTabTitleFromID(t, context)))
+                    .toList(),
+                onTap: (index) {
+                  if (widget.kind == TripKind.today) {
+                    ref.read(todayFilterProvider.state).state =
+                        kTodayFilters[index];
+                  } else {
+                    ref.read(pastFilterProvider.state).state =
+                        kPastFilters[index];
+                  }
+                },
               ),
-              borderWidth: 1,
-              borderColor: kColorPrimaryBlue,
-              unselectedBorderColor: tabColor,
-              radius: 100,
-              height: 70.h,
-              buttonMargin: EdgeInsets.symmetric(horizontal: 4.w),
-              //contentPadding: EdgeInsets.symmetric(horizontal: 8.w),
-              tabs: filterTabs
-                  .map((t) => Tab(text: getTabTitleFromID(t, context)))
-                  .toList(),
-              onTap: (index) {
-                if (widget.kind == TripKind.today) {
-                  ref.read(todayFilterProvider.state).state =
-                      kTodayFilters[index];
-                } else {
-                  ref.read(pastFilterProvider.state).state =
-                      kPastFilters[index];
-                }
-              },
-            ),
-          ],
+            ],
+          ),
         ),
         Expanded(
           child: TripsListViewBody(

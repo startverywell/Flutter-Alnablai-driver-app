@@ -103,12 +103,15 @@ class _SuperVisorCallScreen extends ConsumerState<SuperVisorCallScreen> {
           )),
         ),
       ),
-      floatingActionButton: SizedBox(
-        height: 138.h,
-        child: IconButton(
-          onPressed: () => context.pop(),
-          //iconSize: 89.h,
-          icon: Image.asset('assets/images/btn_back.png'),
+      floatingActionButton: Padding(
+        padding: EdgeInsets.symmetric(vertical: 95.h),
+        child: SizedBox(
+          height: 138.h,
+          child: IconButton(
+            onPressed: () => context.pop(),
+            //iconSize: 89.h,
+            icon: Image.asset('assets/images/btn_back.png'),
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
