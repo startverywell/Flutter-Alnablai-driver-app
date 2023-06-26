@@ -35,12 +35,23 @@ class TripsRepository {
     return searched.first;
   }
 
-  Stream<TripList> watchFilterTrips(TripStatus filter) {
+  Stream<TripList> watchFilterTrips(TripStatus filter, String searchKey) {
     return _trips.stream.map((tripsData) {
-      if (filter == TripStatus.all) {
+      if (filter == TripStatus.all && searchKey == '') {
         return tripsData;
+      } else if (filter == TripStatus.all) {
+        return tripsData
+            .where((t) => (t.clientName.contains(searchKey) ||
+                t.busNo.contains(searchKey) ||
+                t.trip_id.contains(searchKey)))
+            .toList();
       } else {
-        return tripsData.where((t) => t.status == filter).toList();
+        return tripsData
+            .where((t) => (t.status == filter &&
+                (t.clientName.contains(searchKey) ||
+                    t.busNo.contains(searchKey) ||
+                    t.trip_id.contains(searchKey))))
+            .toList();
       }
     });
   }

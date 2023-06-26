@@ -12,6 +12,7 @@ import 'package:alnabali_driver/src/features/trip/trip.dart';
 final tripsKindProvider = StateProvider<TripKind>((ref) => TripKind.today);
 final todayFilterProvider = StateProvider<TripStatus>((ref) => TripStatus.all);
 final pastFilterProvider = StateProvider<TripStatus>((ref) => TripStatus.all);
+final searchFilterProvider = StateProvider<String>((ref) => '');
 
 // * ---------------------------------------------------------------------------
 // * TripsListController
@@ -75,12 +76,14 @@ final pastTripsListCtrProvider =
 
 final todayFilteredTripsProvider = StreamProvider.autoDispose<TripList>((ref) {
   final filter = ref.watch(todayFilterProvider);
+  final search = ref.watch(searchFilterProvider);
   developer.log('today filter=$filter');
-  return ref.watch(todayTripsRepoProvider).watchFilterTrips(filter);
+  return ref.watch(todayTripsRepoProvider).watchFilterTrips(filter, search);
 });
 
 final pastFilteredTripsProvider = StreamProvider.autoDispose<TripList>((ref) {
   final filter = ref.watch(pastFilterProvider);
+  final search = ref.watch(searchFilterProvider);
   developer.log('past filter=$filter');
-  return ref.watch(pastTripsRepoProvider).watchFilterTrips(filter);
+  return ref.watch(pastTripsRepoProvider).watchFilterTrips(filter, search);
 });

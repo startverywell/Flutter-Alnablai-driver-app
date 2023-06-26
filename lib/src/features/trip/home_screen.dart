@@ -183,7 +183,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             children: [
               Container(
                 margin: EdgeInsets.symmetric(vertical: 30.h),
-                height: 260.h,
+                height: 190.h,
                 child: Image.asset('assets/images/home_icon.png'),
               ),
               Expanded(

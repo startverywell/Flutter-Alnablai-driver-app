@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:alnabali_driver/src/features/profile/edit_profile_validators.dart';
+import 'package:alnabali_driver/src/features/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -97,10 +98,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
   @override
   void initState() {
     super.initState();
-
+    ref.read(homeAccountCtrProvider.notifier).doGetProfile();
     // edit controllers must be initialized only once!
     var profile = ref.read(editProfileCtrProvider.notifier).currProfile;
-    print(profile.toString());
     if (profile != null) {
       _name.text = profile.nameEN;
       _phone.text = profile.phone;
@@ -198,19 +198,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
                   ),
                 ),
                 Expanded(
-                    child: RefreshIndicator(
-                  onRefresh: () async {
-                    var profile =
-                        ref.read(editProfileCtrProvider.notifier).currProfile;
-                    if (profile != null) {
-                      _name.text = profile.nameEN;
-                      _phone.text = profile.phone;
-                      _birthday.text = profile.birthday;
-                      _address.text = profile.address;
-                      _avatarImg = profile.profileImage;
-                      _nameEn = profile.nameEN;
-                    }
-                  },
                   child: Stack(
                     alignment: AlignmentDirectional.topCenter,
                     children: [
@@ -220,132 +207,157 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
                           child: CustomPaint(painter: AccountBgPainter()),
                         ),
                       ),
-                      SizedBox.expand(
+                      SizedBox(
                         child: FocusScope(
                           node: _node,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Flexible(child: SizedBox(height: 160.h)),
-                                GestureDetector(
-                                  onTap: () {
-                                    pickImage();
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                          color: kColorAvatarBorder,
-                                          width: 1.0),
+                          child: RefreshIndicator(
+                            onRefresh: () async {
+                              await ref
+                                  .read(homeAccountCtrProvider.notifier)
+                                  .doGetProfile();
+                              var profile = ref
+                                  .read(editProfileCtrProvider.notifier)
+                                  .currProfile;
+                              if (profile != null) {
+                                _name.text = profile.nameEN;
+                                _phone.text = profile.phone;
+                                _birthday.text = profile.birthday;
+                                _address.text = profile.address;
+                                _avatarImg = profile.profileImage;
+                                setState(() {
+                                  _nameEn:
+                                  profile.nameEN;
+                                });
+                                _nameEn = profile.nameEN;
+                              }
+                            },
+                            child: SingleChildScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Flexible(child: SizedBox(height: 160.h)),
+                                  GestureDetector(
+                                    onTap: () {
+                                      pickImage();
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: kColorAvatarBorder,
+                                            width: 1.0),
+                                      ),
+                                      child: _image == null
+                                          ? CircleAvatar(
+                                              radius: 165.h,
+                                              backgroundColor: Colors.white,
+                                              backgroundImage:
+                                                  AssetImage(_avatarImg),
+                                              // foregroundImage: profile != null
+                                              //     ? NetworkImage(profile.profileImage)
+                                              //     : null,
+                                              foregroundImage:
+                                                  NetworkImage(_avatarImg),
+                                              onForegroundImageError:
+                                                  (exception, stackTrace) {
+                                                print(
+                                                    'onForegroundImageError: $exception');
+                                              },
+                                            )
+                                          : CircleAvatar(
+                                              radius: 165.h,
+                                              backgroundColor: Colors.white,
+                                              backgroundImage:
+                                                  FileImage(File(_image!.path)),
+                                            ),
                                     ),
-                                    child: _image == null
-                                        ? CircleAvatar(
-                                            radius: 165.h,
-                                            backgroundColor: Colors.white,
-                                            backgroundImage:
-                                                AssetImage(_avatarImg),
-                                            // foregroundImage: profile != null
-                                            //     ? NetworkImage(profile.profileImage)
-                                            //     : null,
-                                            foregroundImage:
-                                                NetworkImage(_avatarImg),
-                                            onForegroundImageError:
-                                                (exception, stackTrace) {
-                                              print(
-                                                  'onForegroundImageError: $exception');
-                                            },
-                                          )
-                                        : CircleAvatar(
-                                            radius: 165.h,
-                                            backgroundColor: Colors.white,
-                                            backgroundImage:
-                                                FileImage(File(_image!.path)),
-                                          ),
                                   ),
-                                ),
-                                Flexible(child: SizedBox(height: 30.h)),
-                                Text(
-                                  profile != null ? profile.nameEN : _nameEn,
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 42.sp,
-                                    color: kColorPrimaryBlue,
-                                  ),
-                                ),
-                                Flexible(child: SizedBox(height: 160.h)),
-                                ProfileTextField(
-                                  txtFieldType: ProfileTextFieldType.name,
-                                  controller: _name,
-                                  onEditComplete: () {
-                                    if (usernameErrorText(
-                                            _name.text, context) ==
-                                        null) {
-                                      _node.nextFocus();
-                                    }
-                                  },
-                                ),
-                                spacer,
-                                ProfileTextField(
-                                  txtFieldType: ProfileTextFieldType.phone,
-                                  controller: _phone,
-                                  onEditComplete: () {
-                                    if (phoneErrorText(_phone.text, context) ==
-                                        null) {
-                                      _node.nextFocus();
-                                    }
-                                  },
-                                ),
-                                spacer,
-                                ProfileTextField(
-                                  txtFieldType:
-                                      ProfileTextFieldType.dateOfBirth,
-                                  controller: _birthday,
-                                  onEditComplete: () {
-                                    if (birthErrorText(
-                                            _birthday.text, context) ==
-                                        null) {
-                                      _node.nextFocus();
-                                    }
-                                  },
-                                ),
-                                spacer,
-                                ProfileTextField(
-                                  txtFieldType: ProfileTextFieldType.address,
-                                  controller: _address,
-                                  onEditComplete: () {
-                                    _submit();
-                                  },
-                                ),
-                                Flexible(child: SizedBox(height: 140.h)),
-                                SizedBox(
-                                  width: 700.w,
-                                  height: 120.h,
-                                  child: ElevatedButton(
-                                    onPressed: _submit,
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: kColorPrimaryBlue,
-                                      shape: const StadiumBorder(),
+                                  Flexible(child: SizedBox(height: 30.h)),
+                                  Text(
+                                    profile?.nameEN ?? _nameEn,
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 42.sp,
+                                      color: kColorPrimaryBlue,
                                     ),
-                                    child: Text(
-                                      AppLocalizations.of(context).save,
-                                      style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 42.sp,
+                                  ),
+                                  Flexible(child: SizedBox(height: 160.h)),
+                                  ProfileTextField(
+                                    txtFieldType: ProfileTextFieldType.name,
+                                    controller: _name,
+                                    onEditComplete: () {
+                                      if (usernameErrorText(
+                                              _name.text, context) ==
+                                          null) {
+                                        _node.nextFocus();
+                                      }
+                                    },
+                                  ),
+                                  spacer,
+                                  ProfileTextField(
+                                    txtFieldType: ProfileTextFieldType.phone,
+                                    controller: _phone,
+                                    onEditComplete: () {
+                                      if (phoneErrorText(
+                                              _phone.text, context) ==
+                                          null) {
+                                        _node.nextFocus();
+                                      }
+                                    },
+                                  ),
+                                  spacer,
+                                  ProfileTextField(
+                                    txtFieldType:
+                                        ProfileTextFieldType.dateOfBirth,
+                                    controller: _birthday,
+                                    onEditComplete: () {
+                                      if (birthErrorText(
+                                              _birthday.text, context) ==
+                                          null) {
+                                        _node.nextFocus();
+                                      }
+                                    },
+                                  ),
+                                  spacer,
+                                  ProfileTextField(
+                                    txtFieldType: ProfileTextFieldType.address,
+                                    controller: _address,
+                                    onEditComplete: () {
+                                      _submit();
+                                    },
+                                  ),
+                                  Flexible(child: SizedBox(height: 140.h)),
+                                  SizedBox(
+                                    width: 700.w,
+                                    height: 120.h,
+                                    child: ElevatedButton(
+                                      onPressed: _submit,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: kColorPrimaryBlue,
+                                        shape: const StadiumBorder(),
+                                      ),
+                                      child: Text(
+                                        AppLocalizations.of(context).save,
+                                        style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 42.sp,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ],
                   ),
-                )),
+                ),
               ],
             ),
           ),

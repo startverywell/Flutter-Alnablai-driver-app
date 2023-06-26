@@ -13,6 +13,7 @@ import 'package:alnabali_driver/src/utils/async_value_ui.dart';
 import 'package:alnabali_driver/src/widgets/buttons_tabbar.dart';
 import 'package:alnabali_driver/src/widgets/dialogs.dart';
 import 'package:alnabali_driver/src/widgets/progress_hud.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const kTodayFilters = [
   TripStatus.all,
@@ -50,6 +51,9 @@ class _TripsListViewState extends ConsumerState<TripsListView>
     with SingleTickerProviderStateMixin {
   late final TabController _tabCtrler;
 
+  final _searchController = TextEditingController();
+
+  String get searchWord => _searchController.text;
   @override
   void initState() {
     super.initState();
@@ -79,6 +83,7 @@ class _TripsListViewState extends ConsumerState<TripsListView>
   @override
   void dispose() {
     _tabCtrler.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -108,7 +113,7 @@ class _TripsListViewState extends ConsumerState<TripsListView>
                 labelStyle: TextStyle(
                   color: Colors.white,
                   fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w400,
                   fontSize: 26.sp,
                 ),
                 unselectedLabelStyle: TextStyle(
@@ -122,8 +127,8 @@ class _TripsListViewState extends ConsumerState<TripsListView>
                 unselectedBorderColor: tabColor,
                 radius: 100,
                 height: 70.h,
-                buttonMargin: EdgeInsets.symmetric(horizontal: 4.w),
-                //contentPadding: EdgeInsets.symmetric(horizontal: 8.w),
+                buttonMargin: EdgeInsets.symmetric(horizontal: 10.w),
+                // contentPadding: EdgeInsets.symmetric(horizontal: 50.w),
                 tabs: filterTabs
                     .map((t) => Tab(text: getTabTitleFromID(t, context)))
                     .toList(),
@@ -138,6 +143,26 @@ class _TripsListViewState extends ConsumerState<TripsListView>
                 },
               ),
             ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 60.w, vertical: 8),
+          child: TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15)),
+              ),
+              hintText: AppLocalizations.of(context).search_hint,
+              contentPadding: kContentPadding,
+            ),
+            onChanged: (String value) async {
+              if (widget.kind == TripKind.today) {
+                ref.read(searchFilterProvider.state).state = value;
+              } else {
+                ref.read(searchFilterProvider.state).state = value;
+              }
+            },
           ),
         ),
         Expanded(

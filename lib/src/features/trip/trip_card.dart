@@ -387,6 +387,7 @@ class _TripCardState extends State<TripCard> {
           }
         } else {
           // here is in trip-list-view.
+          print(widget.info.id);
           context.pushNamed(
             AppRoute.tripDetail.name,
             params: {'tripId': widget.info.id},

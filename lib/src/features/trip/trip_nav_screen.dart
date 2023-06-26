@@ -17,6 +17,7 @@ import 'package:alnabali_driver/src/features/trip/trip_nav_dialogs.dart';
 import 'package:alnabali_driver/src/features/trip/trip.dart';
 import 'package:alnabali_driver/src/widgets/dialogs.dart';
 import 'package:alnabali_driver/src/widgets/progress_hud.dart';
+import 'package:alnabali_driver/src/routing/app_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TripNavScreen extends ConsumerStatefulWidget {
@@ -381,7 +382,12 @@ class _NavigationScreenState extends ConsumerState<TripNavScreen> {
           height: 138.h,
           child: IconButton(
             onPressed: () {
-              context.pop();
+              context.replaceNamed(
+                AppRoute.tripDetail.name,
+                params: {'tripId': widget.tripId},
+              );
+              // print(widget.tripId);
+              // context.pop();
             },
             icon: Image.asset('assets/images/btn_back.png'),
           ),

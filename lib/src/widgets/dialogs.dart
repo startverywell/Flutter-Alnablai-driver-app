@@ -70,19 +70,15 @@ Future<void> showOkayDialog(
     builder: (BuildContext context) {
       String title = '';
       if (okStatus == TripStatus.accepted) {
-        title =
-            '${AppLocalizations.of(context).youHaveAccepted}${info.trip_id}';
+        title = AppLocalizations.of(context).youHaveAccepted;
       } else if (okStatus == TripStatus.rejected) {
-        title =
-            '${AppLocalizations.of(context).youHaveRejected}${info.trip_id}';
+        title = AppLocalizations.of(context).youHaveRejected;
       } else if (okStatus == TripStatus.started) {
-        title = '${AppLocalizations.of(context).youHaveStarted}${info.trip_id}';
+        title = AppLocalizations.of(context).youHaveStarted;
       } else if (okStatus == TripStatus.finished) {
-        title =
-            '${AppLocalizations.of(context).youHaveFinished}${info.trip_id}';
+        title = AppLocalizations.of(context).youHaveFinished;
       } else if (okStatus == TripStatus.canceled) {
-        title =
-            '${AppLocalizations.of(context).youHaveCanceled}${info.trip_id}';
+        title = AppLocalizations.of(context).youHaveCanceled;
       }
 
       return AlertDialog(
@@ -160,11 +156,11 @@ Future<bool?> showConfirmDialog(
     builder: (BuildContext context) {
       String title = '';
       if (status == TripStatus.pending) {
-        title = '${AppLocalizations.of(context).areYouSureAccept}$tripNo?';
+        title = AppLocalizations.of(context).areYouSureAccept;
       } else if (status == TripStatus.accepted) {
-        title = '${AppLocalizations.of(context).areYouSureAccept}$tripNo?';
+        title = AppLocalizations.of(context).areYouSureAccept;
       } else if (status == TripStatus.started) {
-        title = '${AppLocalizations.of(context).areYouSureAccept}$tripNo?';
+        title = AppLocalizations.of(context).areYouSureAccept;
       }
 
       return AlertDialog(
@@ -261,7 +257,7 @@ Future<String?> showRejectDialog(
             SizedBox(
               width: 660.w,
               child: Text(
-                '${AppLocalizations.of(context).youAreRejecting}$tripNo',
+                AppLocalizations.of(context).youAreRejecting,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Montserrat',

@@ -114,7 +114,6 @@ class _HomeAccountPageState extends ConsumerState<HomeAccountPage>
 
     final state = ref.watch(homeAccountCtrProvider);
     final profile = ref.watch(profileStateChangesProvider).value;
-    print(profile);
 
     developer.log('HomeAccountPage::build() - profile=${profile?.nameEN}');
 
