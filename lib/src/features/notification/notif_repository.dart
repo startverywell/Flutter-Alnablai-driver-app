@@ -16,11 +16,6 @@ class NotifRepository {
   NotifList _notifs = []; //InMemoryStore<NotifList>([]);
 
   Future<NotifList> doFetchNotifs() async {
-    //if (_notifs.isNotEmpty) {
-    //  // notifications fetched already.
-    //  return _notifs;
-    //}
-
     dynamic data = await DioClient.postNotificationAll(authRepo.uid!);
     developer.log('listFetchNotifs() returned: $data');
     developer.log('uid() returned: ${authRepo.uid.toString()}');

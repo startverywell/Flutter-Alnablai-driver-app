@@ -195,15 +195,25 @@ class TripsListViewBody extends ConsumerStatefulWidget {
 }
 
 class _TripsTabBodyState extends ConsumerState<TripsListViewBody> {
+  final int _perPage = 10;
+  int _page = 1;
+  bool _isLoading = true;
+  final ScrollController _scrollController = new ScrollController();
   @override
   void initState() {
     super.initState();
-
+    _scrollController.addListener(_scrollListener);
     if (widget.kind == TripKind.today) {
       ref.read(todayTripsListCtrProvider.notifier).doFetchTrips();
     } else {
       ref.read(pastTripsListCtrProvider.notifier).doFetchTrips();
     }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    super.dispose();
   }
 
   @override
@@ -216,13 +226,23 @@ class _TripsTabBodyState extends ConsumerState<TripsListViewBody> {
           (_, state) => state.showAlertDialogOnError(context));
 
       state = ref.watch(todayTripsListCtrProvider);
-      trips = ref.watch(todayFilteredTripsProvider).value;
+      trips = ref
+          .watch(todayFilteredTripsProvider)
+          .value
+          ?.take(_perPage * _page)
+          .toList();
+      _isLoading = _page == 1 ? state.isLoading : _isLoading;
     } else {
       ref.listen<AsyncValue>(pastTripsListCtrProvider.select((state) => state),
           (_, state) => state.showAlertDialogOnError(context));
 
       state = ref.watch(pastTripsListCtrProvider);
-      trips = ref.watch(pastFilteredTripsProvider).value;
+      trips = ref
+          .watch(pastFilteredTripsProvider)
+          .value
+          ?.take(_perPage * _page)
+          .toList();
+      _isLoading = _page == 1 ? state.isLoading : _isLoading;
     }
 
     developer
@@ -230,48 +250,64 @@ class _TripsTabBodyState extends ConsumerState<TripsListViewBody> {
             'trips=${trips?.length}');
 
     return ProgressHUD(
-        inAsyncCall: state.isLoading,
-        child: RefreshIndicator(
-          onRefresh: () async {
-            if (widget.kind == TripKind.today) {
-              await ref.read(todayTripsListCtrProvider.notifier).doFetchTrips();
-            } else {
-              await ref.read(pastTripsListCtrProvider.notifier).doFetchTrips();
-            }
-          },
-          child: ListView.separated(
-            // controller: _scrollController,
-            itemCount: trips?.length ?? 0,
-            itemBuilder: (BuildContext context, int itemIdx) {
-              return ProgressHUD(
-                inAsyncCall: state.isLoading,
-                child: TripCard(
-                  info: trips!.elementAt(itemIdx),
-                  onYesNo: (info, targetStatus, extra) {
-                    successCallback(value) {
-                      if (value == true) {
-                        showOkayDialog(context, info, targetStatus);
-                      }
+      inAsyncCall: _isLoading,
+      child: RefreshIndicator(
+        onRefresh: () async {
+          if (widget.kind == TripKind.today) {
+            await ref.read(todayTripsListCtrProvider.notifier).doFetchTrips();
+          } else {
+            await ref.read(pastTripsListCtrProvider.notifier).doFetchTrips();
+          }
+        },
+        child: ListView.separated(
+          controller: _scrollController,
+          itemCount: trips?.length ?? 0,
+          itemBuilder: (BuildContext context, int itemIdx) {
+            return ProgressHUD(
+              inAsyncCall: state.isLoading,
+              child: TripCard(
+                info: trips!.elementAt(itemIdx),
+                onYesNo: (info, targetStatus, extra) {
+                  successCallback(value) {
+                    if (value == true) {
+                      showOkayDialog(context, info, targetStatus);
                     }
+                  }
 
-                    if (widget.kind == TripKind.today) {
-                      ref
-                          .read(todayTripsListCtrProvider.notifier)
-                          .doChangeTrip(info, targetStatus, extra)
-                          .then(successCallback);
-                    } else {
-                      ref
-                          .read(pastTripsListCtrProvider.notifier)
-                          .doChangeTrip(info, targetStatus, extra)
-                          .then(successCallback);
-                    }
-                  },
-                ),
-              );
-            },
-            separatorBuilder: (BuildContext context, int index) =>
-                SizedBox(height: 30.h),
-          ),
-        ));
+                  if (widget.kind == TripKind.today) {
+                    ref
+                        .read(todayTripsListCtrProvider.notifier)
+                        .doChangeTrip(info, targetStatus, extra)
+                        .then(successCallback);
+                  } else {
+                    ref
+                        .read(pastTripsListCtrProvider.notifier)
+                        .doChangeTrip(info, targetStatus, extra)
+                        .then(successCallback);
+                  }
+                },
+              ),
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) =>
+              SizedBox(height: 30.h),
+        ),
+      ),
+    );
+  }
+
+  void _scrollListener() async {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      setState(() {
+        _isLoading = true;
+      });
+      await Future.delayed(const Duration(seconds: 2));
+      setState(() {
+        _page++;
+        _isLoading = false;
+      });
+      print('============${_page}');
+    }
   }
 }

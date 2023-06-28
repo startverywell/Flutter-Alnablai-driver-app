@@ -158,9 +158,9 @@ Future<bool?> showConfirmDialog(
       if (status == TripStatus.pending) {
         title = AppLocalizations.of(context).areYouSureAccept;
       } else if (status == TripStatus.accepted) {
-        title = AppLocalizations.of(context).areYouSureAccept;
+        title = AppLocalizations.of(context).areYouSureStart;
       } else if (status == TripStatus.started) {
-        title = AppLocalizations.of(context).areYouSureAccept;
+        title = AppLocalizations.of(context).areYouSureFinish;
       }
 
       return AlertDialog(
@@ -329,7 +329,7 @@ Future<String?> showRejectDialog(
             onPressed: () {
               Navigator.pop(context, null);
             },
-            title: AppLocalizations.of(context).no,
+            title: AppLocalizations.of(context).cancel,
           ),
         ],
       );
