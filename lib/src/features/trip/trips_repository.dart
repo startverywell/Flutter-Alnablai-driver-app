@@ -43,6 +43,7 @@ class TripsRepository {
         return tripsData
             .where((t) => (t.clientName.contains(searchKey) ||
                 t.busNo.contains(searchKey) ||
+                t.tripName.contains(searchKey) ||
                 t.trip_id.contains(searchKey)))
             .toList();
       } else {
@@ -50,6 +51,7 @@ class TripsRepository {
             .where((t) => (t.status == filter &&
                 (t.clientName.contains(searchKey) ||
                     t.busNo.contains(searchKey) ||
+                    t.tripName.contains(searchKey) ||
                     t.trip_id.contains(searchKey))))
             .toList();
       }

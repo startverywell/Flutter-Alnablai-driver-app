@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:alnabali_driver/src/constants/app_styles.dart';
 import 'package:alnabali_driver/src/features/trip/trip.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TripBusLine extends StatefulWidget {
   const TripBusLine({
@@ -18,6 +19,21 @@ class TripBusLine extends StatefulWidget {
 }
 
 class _TripBusLineState extends State<TripBusLine> {
+  bool _dateType = true;
+
+  getDateType() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      _dateType = sharedPreferences.getBool("dateType") ?? true;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getDateType();
+  }
+
   Widget _buildTimeLineRow() {
     final dateTextStyle = TextStyle(
       fontFamily: 'Montserrat',
@@ -38,7 +54,7 @@ class _TripBusLineState extends State<TripBusLine> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.info.getStartDateStr(),
+              widget.info.getStartDateStr(_dateType),
               style: dateTextStyle,
             ),
             Text(
@@ -52,7 +68,7 @@ class _TripBusLineState extends State<TripBusLine> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.info.getEndDateStr(),
+              widget.info.getEndDateStr(_dateType),
               style: dateTextStyle,
             ),
             Text(

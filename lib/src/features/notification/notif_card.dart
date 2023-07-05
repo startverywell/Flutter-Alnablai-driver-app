@@ -60,7 +60,7 @@ class NotifCard extends StatelessWidget {
                   borderRadius: borderRadius,
                   onTap: null, //onPressed,
                   child: Container(
-                    height: 250.h,
+                    height: 300.h,
                     padding:
                         EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
                     child: Row(

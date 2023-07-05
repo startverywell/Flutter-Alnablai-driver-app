@@ -12,7 +12,7 @@ class AuthRepository {
   String? get uid => _uid;
 
   set setUid(String str) {
-    this._uid = str;
+    _uid = str;
   }
 
   Future<bool> doLogIn(String username, String password) async {
@@ -28,6 +28,7 @@ class AuthRepository {
       _uid = data['id'].toString();
       await prefs.setString("login_id", data['id'].toString());
       await prefs.setBool('isLogin', true);
+      await prefs.setBool('dateType', data['date'].toString() == '1');
       return true;
     } else if (result == 'Invalid Driver') {
       throw const AppException.userNotFound();

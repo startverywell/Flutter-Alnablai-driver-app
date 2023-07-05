@@ -13,8 +13,6 @@ import 'package:alnabali_driver/src/widgets/gradient_button.dart';
 import 'package:alnabali_driver/src/widgets/dialogs.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../widgets/progress_hud.dart';
-
 typedef TripCardCallback = void Function(
     Trip info, TripStatus targetStatus, String? extra);
 
@@ -277,7 +275,7 @@ class _TripCardState extends State<TripCard> {
               height: btnH,
               onPressed: () {
                 if (widget.info.status == TripStatus.started) {
-                  context.replaceNamed(
+                  context.pushNamed(
                     AppRoute.tripNavigation.name,
                     params: {'tripId': widget.info.id},
                   );
@@ -380,14 +378,13 @@ class _TripCardState extends State<TripCard> {
           // here is in trip-detail-screen.
           if (widget.info.status == TripStatus.accepted ||
               widget.info.status == TripStatus.started) {
-            context.replaceNamed(
+            context.pushNamed(
               AppRoute.tripNavigation.name,
               params: {'tripId': widget.info.id},
             );
           }
         } else {
           // here is in trip-list-view.
-          print(widget.info.id);
           context.pushNamed(
             AppRoute.tripDetail.name,
             params: {'tripId': widget.info.id},

@@ -10,6 +10,7 @@ import 'package:alnabali_driver/src/features/notification/home_notifications_con
 import 'package:alnabali_driver/src/features/notification/notif_card.dart';
 import 'package:alnabali_driver/src/utils/async_value_ui.dart';
 import 'package:alnabali_driver/src/widgets/progress_hud.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeNotificationsPage extends ConsumerStatefulWidget {
   const HomeNotificationsPage({super.key});
@@ -24,9 +25,17 @@ class _HomeNotificationsPageState extends ConsumerState<HomeNotificationsPage> {
   int _page = 1;
   bool _isLoading = true;
   final ScrollController _scrollController = new ScrollController();
+  bool _dateType = true;
+
+  getDateType() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    _dateType = sharedPreferences.getBool("dateType") ?? true;
+  }
+
   @override
   void initState() {
     super.initState();
+    getDateType();
     _scrollController.addListener(_scrollListener);
     ref.read(homeNotificationsCtrProvider.notifier).doFetchNotifs();
   }
@@ -81,13 +90,17 @@ class _HomeNotificationsPageState extends ConsumerState<HomeNotificationsPage> {
 
                     final String dateText;
                     if (valueDate == today) {
-                      dateText =
-                          'Today, ${DateFormat('dd/MM/yyyy').format(valueDate)}';
+                      dateText = _dateType
+                          ? 'Today, ${DateFormat('dd/MM/yyyy').format(valueDate)}'
+                          : 'Today, ${DateFormat('MM/dd/yyyy').format(valueDate)}';
                     } else if (valueDate == yesterday) {
-                      dateText =
-                          'Yesterday, ${DateFormat('dd/MM/yyyy').format(valueDate)}';
+                      dateText = _dateType
+                          ? 'Yesterday, ${DateFormat('dd/MM/yyyy').format(valueDate)}'
+                          : 'Yesterday, ${DateFormat('MM/dd/yyyy').format(valueDate)}';
                     } else {
-                      dateText = DateFormat('E, dd/MM/yyyy').format(valueDate);
+                      dateText = _dateType
+                          ? DateFormat('E, dd/MM/yyyy').format(valueDate)
+                          : DateFormat('E, dd/MM/yyyy').format(valueDate);
                     }
                     return Container(
                       margin: EdgeInsets.symmetric(
@@ -139,7 +152,6 @@ class _HomeNotificationsPageState extends ConsumerState<HomeNotificationsPage> {
         _page++;
         _isLoading = false;
       });
-      print('============${_page}');
     }
   }
 }

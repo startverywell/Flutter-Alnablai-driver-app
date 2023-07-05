@@ -47,10 +47,14 @@ class Trip {
 
   String getTripTitleShort() => '# $id';
 
-  String getStartDateStr() => DateFormat('dd/MM/yyyy').format(startDate);
+  String getStartDateStr(bool dateType) => dateType
+      ? DateFormat('dd/MM/yyyy').format(startDate)
+      : DateFormat('MM/dd/yyyy').format(startDate);
   String getStartTimeStr() => DateFormat('hh:mm a').format(startDate);
 
-  String getEndDateStr() => DateFormat('dd/MM/yyyy').format(endDate);
+  String getEndDateStr(bool dateType) => dateType
+      ? DateFormat('dd/MM/yyyy').format(endDate)
+      : DateFormat('MM/dd/yyyy').format(endDate);
   String getEndTimeStr() => DateFormat('hh:mm a').format(endDate);
 
   String getDurationStr() {

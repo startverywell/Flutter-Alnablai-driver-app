@@ -27,6 +27,7 @@ class TripNavScreen extends ConsumerStatefulWidget {
   });
 
   final String tripId;
+  // final bool goType;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -382,12 +383,13 @@ class _NavigationScreenState extends ConsumerState<TripNavScreen> {
           height: 138.h,
           child: IconButton(
             onPressed: () {
-              context.replaceNamed(
-                AppRoute.tripDetail.name,
-                params: {'tripId': widget.tripId},
-              );
+              // context.replaceNamed(
+              //   AppRoute.tripDetail.name,
+              //   params: {'tripId': widget.tripId},
+              // );
               // print(widget.tripId);
               // context.pop();
+              Navigator.pop(context);
             },
             icon: Image.asset('assets/images/btn_back.png'),
           ),

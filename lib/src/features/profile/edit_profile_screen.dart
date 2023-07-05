@@ -3,7 +3,6 @@
 import 'dart:io';
 
 import 'package:alnabali_driver/src/features/profile/edit_profile_validators.dart';
-import 'package:alnabali_driver/src/features/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
