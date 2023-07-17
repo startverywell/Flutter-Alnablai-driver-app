@@ -26,6 +26,8 @@ class NotifRepository {
     if (result is List) {
       try {
         _notifs = result.map((data) => Notif.fromMap(data)).toList();
+        _notifs.sort((a, b) => _convertTimeString(a.notifyTime)
+            .compareTo(_convertTimeString(b.notifyTime)));
         developer.log('doFetchNotifs() src=${_notifs.toString()}');
       } catch (e) {
         developer.log('doFetchNotifs() error=$e');
@@ -38,6 +40,15 @@ class NotifRepository {
 
   Future<void> doReadAt(String notiID) async {
     await DioClient.doReadAt(notiID);
+  }
+
+  // Helper function to convert time string to DateTime for comparison
+  DateTime _convertTimeString(String timeString) {
+    final timeParts = timeString.split(':');
+    final hour = int.parse(timeParts[0]);
+    final minute = int.parse(timeParts[1]);
+
+    return DateTime(2022, 1, 1, hour, minute);
   }
 }
 

@@ -98,52 +98,115 @@ class _TripsListViewState extends ConsumerState<TripsListView>
       children: [
         Padding(
           padding: EdgeInsets.only(bottom: 30.h),
-          child: Row(
-            children: [
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20.w),
-                height: 60.h,
-                child: Image.asset('assets/images/home_icon2.png'),
-              ),
-              ButtonsTabBar(
-                controller: _tabCtrler,
-                duration: 0,
-                backgroundColor: kColorPrimaryBlue,
-                unselectedBackgroundColor: Colors.transparent,
-                labelStyle: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w400,
-                  fontSize: 26.sp,
+          child: widget.kind == TripKind.today
+              ? SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 60.w, right: 20.w),
+                        height: 60.h,
+                        child: Image.asset('assets/images/home_icon2.png'),
+                      ),
+                      ButtonsTabBar(
+                        controller: _tabCtrler,
+                        duration: 0,
+                        backgroundColor: kColorPrimaryBlue,
+                        unselectedBackgroundColor: Colors.transparent,
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 26.sp,
+                        ),
+                        unselectedLabelStyle: TextStyle(
+                          color: tabColor,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 26.sp,
+                        ),
+                        borderWidth: 1,
+                        borderColor: kColorPrimaryBlue,
+                        unselectedBorderColor: tabColor,
+                        radius: 100,
+                        height: 70.h,
+                        buttonMargin: EdgeInsets.symmetric(horizontal: 10.w),
+                        // contentPadding: EdgeInsets.symmetric(horizontal: 50.w),
+                        tabs: filterTabs
+                            .map(
+                                (t) => Tab(text: getTabTitleFromID(t, context)))
+                            .toList(),
+                        onTap: (index) {
+                          if (widget.kind == TripKind.today) {
+                            ref.read(todayFilterProvider.state).state =
+                                kTodayFilters[index];
+                          } else {
+                            ref.read(pastFilterProvider.state).state =
+                                kPastFilters[index];
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: 60.w, right: 20.w),
+                            height: 60.h,
+                            child: Image.asset('assets/images/home_icon2.png'),
+                          ),
+                          ButtonsTabBar(
+                            controller: _tabCtrler,
+                            duration: 0,
+                            backgroundColor: kColorPrimaryBlue,
+                            unselectedBackgroundColor: Colors.transparent,
+                            labelStyle: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 26.sp,
+                            ),
+                            unselectedLabelStyle: TextStyle(
+                              color: tabColor,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 26.sp,
+                            ),
+                            borderWidth: 1,
+                            borderColor: kColorPrimaryBlue,
+                            unselectedBorderColor: tabColor,
+                            radius: 100,
+                            height: 70.h,
+                            buttonMargin:
+                                EdgeInsets.symmetric(horizontal: 10.w),
+                            // contentPadding: EdgeInsets.symmetric(horizontal: 50.w),
+                            tabs: filterTabs
+                                .map((t) =>
+                                    Tab(text: getTabTitleFromID(t, context)))
+                                .toList(),
+                            onTap: (index) {
+                              if (widget.kind == TripKind.today) {
+                                ref.read(todayFilterProvider.state).state =
+                                    kTodayFilters[index];
+                              } else {
+                                ref.read(pastFilterProvider.state).state =
+                                    kPastFilters[index];
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                unselectedLabelStyle: TextStyle(
-                  color: tabColor,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w400,
-                  fontSize: 26.sp,
-                ),
-                borderWidth: 1,
-                borderColor: kColorPrimaryBlue,
-                unselectedBorderColor: tabColor,
-                radius: 100,
-                height: 70.h,
-                buttonMargin: EdgeInsets.symmetric(horizontal: 10.w),
-                // contentPadding: EdgeInsets.symmetric(horizontal: 50.w),
-                tabs: filterTabs
-                    .map((t) => Tab(text: getTabTitleFromID(t, context)))
-                    .toList(),
-                onTap: (index) {
-                  if (widget.kind == TripKind.today) {
-                    ref.read(todayFilterProvider.state).state =
-                        kTodayFilters[index];
-                  } else {
-                    ref.read(pastFilterProvider.state).state =
-                        kPastFilters[index];
-                  }
-                },
-              ),
-            ],
-          ),
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 60.w, vertical: 8),
@@ -259,39 +322,41 @@ class _TripsTabBodyState extends ConsumerState<TripsListViewBody> {
             await ref.read(pastTripsListCtrProvider.notifier).doFetchTrips();
           }
         },
-        child: ListView.separated(
-          controller: _scrollController,
-          itemCount: trips?.length ?? 0,
-          itemBuilder: (BuildContext context, int itemIdx) {
-            return ProgressHUD(
-              inAsyncCall: state.isLoading,
-              child: TripCard(
-                info: trips!.elementAt(itemIdx),
-                onYesNo: (info, targetStatus, extra) {
-                  successCallback(value) {
-                    if (value == true) {
-                      showOkayDialog(context, info, targetStatus);
-                    }
-                  }
+        child: trips?.length == 0
+            ? Center(child: Text(AppLocalizations.of(context).no_data))
+            : ListView.separated(
+                controller: _scrollController,
+                itemCount: trips?.length ?? 0,
+                itemBuilder: (BuildContext context, int itemIdx) {
+                  return ProgressHUD(
+                    inAsyncCall: state.isLoading,
+                    child: TripCard(
+                      info: trips!.elementAt(itemIdx),
+                      onYesNo: (info, targetStatus, extra) {
+                        successCallback(value) {
+                          if (value == true) {
+                            showOkayDialog(context, info, targetStatus);
+                          }
+                        }
 
-                  if (widget.kind == TripKind.today) {
-                    ref
-                        .read(todayTripsListCtrProvider.notifier)
-                        .doChangeTrip(info, targetStatus, extra)
-                        .then(successCallback);
-                  } else {
-                    ref
-                        .read(pastTripsListCtrProvider.notifier)
-                        .doChangeTrip(info, targetStatus, extra)
-                        .then(successCallback);
-                  }
+                        if (widget.kind == TripKind.today) {
+                          ref
+                              .read(todayTripsListCtrProvider.notifier)
+                              .doChangeTrip(info, targetStatus, extra)
+                              .then(successCallback);
+                        } else {
+                          ref
+                              .read(pastTripsListCtrProvider.notifier)
+                              .doChangeTrip(info, targetStatus, extra)
+                              .then(successCallback);
+                        }
+                      },
+                    ),
+                  );
                 },
+                separatorBuilder: (BuildContext context, int index) =>
+                    SizedBox(height: 30.h),
               ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) =>
-              SizedBox(height: 30.h),
-        ),
       ),
     );
   }

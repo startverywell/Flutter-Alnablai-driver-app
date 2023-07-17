@@ -5,7 +5,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:alnabali_driver/src/network/dio_exception.dart';
 
 class DioClient {
@@ -192,15 +192,17 @@ class DioClient {
   static Future<dynamic> postDailyTripToday(String id) async {
     final token = await _getToken();
 
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final currentLang = sharedPreferences.getString("lang");
+
     var dio = Dio(_baseOptions);
     dio.options.headers['X-CSRF-TOKEN'] = token;
 
     // ignore: avoid_print
-    print("jkljkljkl$id");
     try {
       final response = await dio.post(
         '/daily-trip/today',
-        data: {'driver_name': id},
+        data: {'driver_name': id, 'lang': currentLang},
       );
       return response.data;
     } on DioError catch (e) {
@@ -213,13 +215,16 @@ class DioClient {
   static Future<dynamic> postDailyTripLast(String id) async {
     final token = await _getToken();
 
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final currentLang = sharedPreferences.getString("lang");
+
     var dio = Dio(_baseOptions);
     dio.options.headers['X-CSRF-TOKEN'] = token;
 
     try {
       final response = await dio.post(
         '/daily-trip/last',
-        data: {'driver_name': id},
+        data: {'driver_name': id, 'lang': currentLang},
       );
       print(response.toString());
       print(id);
@@ -254,10 +259,11 @@ class DioClient {
   static Future<dynamic> postNotificationAll(String id) async {
     final token = await _getToken();
     var dio = Dio(_baseOptions);
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final currentLang = sharedPreferences.getString("lang");
     try {
-      final response = await dio.get('/notification/all/$id',
+      final response = await dio.get('/notification/all/$id/$currentLang',
           options: Options(headers: {'X-CSRF-TOKEN': token}));
-      print("response data ${response.data}");
       return response.data;
     } on DioError catch (e) {
       if (e.response?.statusCode == 401) {
