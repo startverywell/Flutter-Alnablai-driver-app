@@ -16,7 +16,9 @@ class Transaction {
   final TripStatus newStatus;
   final DateTime updateDate;
 
-  String getUpdateTimeStr() => DateFormat('hh:mm a').format(updateDate);
+  String getUpdateTimeStr() {
+    return DateFormat('hh:mm:ss a').format(updateDate);
+  }
 
   factory Transaction.fromMap(Map<String, dynamic> data) {
     var status =

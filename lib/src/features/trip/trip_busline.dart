@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:alnabali_driver/src/constants/app_styles.dart';
 import 'package:alnabali_driver/src/features/trip/trip.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TripBusLine extends StatefulWidget {
   const TripBusLine({
@@ -34,7 +35,7 @@ class _TripBusLineState extends State<TripBusLine> {
     getDateType();
   }
 
-  Widget _buildTimeLineRow() {
+  Widget _buildTimeLineRow(BuildContext context) {
     final dateTextStyle = TextStyle(
       fontFamily: 'Montserrat',
       fontWeight: FontWeight.w600,
@@ -58,7 +59,10 @@ class _TripBusLineState extends State<TripBusLine> {
               style: dateTextStyle,
             ),
             Text(
-              widget.info.getStartTimeStr(),
+              widget.info
+                  .getStartTimeStr()
+                  .replaceAll("AM", AppLocalizations.of(context).AM)
+                  .replaceAll("PM", AppLocalizations.of(context).PM),
               style: timeTextStyle,
             ),
           ],
@@ -72,7 +76,10 @@ class _TripBusLineState extends State<TripBusLine> {
               style: dateTextStyle,
             ),
             Text(
-              widget.info.getEndTimeStr(),
+              widget.info
+                  .getEndTimeStr()
+                  .replaceAll("AM", AppLocalizations.of(context).AM)
+                  .replaceAll("PM", AppLocalizations.of(context).PM),
               style: timeTextStyle,
             ),
           ],
@@ -174,7 +181,7 @@ class _TripBusLineState extends State<TripBusLine> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildTimeLineRow(),
+          _buildTimeLineRow(context),
           SizedBox(height: 10.h),
           _buildBusRow(),
           SizedBox(height: 10.h),

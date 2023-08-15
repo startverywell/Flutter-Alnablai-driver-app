@@ -4,6 +4,7 @@ import 'package:alnabali_driver/src/features/trip/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TrackCard extends StatefulWidget {
   const TrackCard({
@@ -112,7 +113,10 @@ class _TrackCardState extends State<TrackCard> {
       widgetList.add(buildTrackRow(
         context,
         t.newStatus,
-        t.getUpdateTimeStr(),
+        t
+            .getUpdateTimeStr()
+            .replaceAll("AM", AppLocalizations.of(context).AM)
+            .replaceAll("PM", AppLocalizations.of(context).PM),
         trackColor,
         i == widget.info.length,
         // i == 2,
