@@ -7,6 +7,7 @@ import 'package:alnabali_driver/src/app.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:alnabali_driver/src/routing/app_router.dart';
 
 Future<void> _firebackgroundMessageHandler(RemoteMessage message) async {
   print("Handling a background message ${message.messageId}");

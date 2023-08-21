@@ -38,6 +38,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       FlutterLocalNotificationsPlugin();
 
   String mToken = "";
+  String tripID = "";
 
   @override
   void initState() {
@@ -79,11 +80,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       onDidReceiveNotificationResponse: (details) {
         try {
           if (details != null && details.toString().isNotEmpty) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomeScreen(),
-                ));
+            print("========================================");
+            print(tripID);
+            if (tripID == "") {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(),
+                  ));
+            } else {
+              context.pushNamed(
+                AppRoute.tripDetail.name,
+                params: {'tripId': tripID},
+              );
+            }
           }
         } catch (e) {}
         return;
@@ -95,8 +105,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       print(
           "onMessage: ${message.notification?.title}/${message.notification?.body}");
 
+      String msgBody = message.notification?.body ?? "get";
+      List<String> msgList = msgBody.split("::::");
+      tripID = msgList[1];
+
       BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
-        message.notification!.body.toString(),
+        msgList[0],
         htmlFormatBigText: true,
         contentTitle: message.notification!.title.toString(),
         htmlFormatContentTitle: true,
@@ -115,10 +129,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         android: androidPlatformChannelSpecifics,
         iOS: const DarwinNotificationDetails(),
       );
-      await flutterLocalNotificationsPlugin.show(0, message.notification?.title,
-          message.notification?.body, platformChannelSpecifics,
-          payload: message.data['body']);
+      await flutterLocalNotificationsPlugin.show(
+          0, message.notification?.title, msgList[0], platformChannelSpecifics,
+          payload: message.data['trip_id']);
     });
+    // FirebaseMessaging.onMessageOpenedApp.listen((message) async {
+    //   print("onTap click");
+    //   print(message.data["trip_id"]);
+    // });
   }
 
   Future<void> getToken() async {

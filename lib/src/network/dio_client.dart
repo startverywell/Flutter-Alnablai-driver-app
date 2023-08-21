@@ -264,6 +264,7 @@ class DioClient {
     try {
       final response = await dio.get('/notification/all/$id/$currentLang',
           options: Options(headers: {'X-CSRF-TOKEN': token}));
+      print(response.data);
       return response.data;
     } on DioError catch (e) {
       if (e.response?.statusCode == 401) {
