@@ -131,7 +131,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
       await flutterLocalNotificationsPlugin.show(
           0, message.notification?.title, msgList[0], platformChannelSpecifics,
-          payload: message.data['trip_id']);
+          payload: msgList[0]);
     });
     // FirebaseMessaging.onMessageOpenedApp.listen((message) async {
     //   print("onTap click");
